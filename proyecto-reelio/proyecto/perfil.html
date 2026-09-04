@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mi perfil — Reelio</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap site-bar">
+    <a href="index.html" class="brand">reel<span>io</span></a>
+    <nav class="primary">
+      <a href="index.html">Catálogo</a>
+      <a href="index.html#listas">Listas</a>
+      <a href="perfil.html" class="active">Estadísticas</a>
+    </nav>
+    <div class="auth-links">
+      <a href="login.html">Iniciar sesión</a>
+      <a href="register.html" class="btn solid">Crear cuenta</a>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="profile-head">
+    <div class="avatar">AG</div>
+    <div>
+      <h1>Angelo</h1>
+      <div class="sub">Miembro desde 2026</div>
+    </div>
+  </div>
+
+  <div class="stat-row">
+    <div><span class="num">48</span><span class="label">Vistas</span></div>
+    <div><span class="num">31</span><span class="label">Reseñas</span></div>
+    <div><span class="num">4.2</span><span class="label">Promedio</span></div>
+    <div><span class="num">5</span><span class="label">Listas</span></div>
+  </div>
+
+  <div class="tabs">
+    <button class="active" data-tab="vistas" type="button">Vistas</button>
+    <button data-tab="resenas" type="button">Reseñas</button>
+    <button data-tab="listas" type="button">Listas</button>
+  </div>
+
+  <div class="tab-panel active" id="tab-vistas">
+    <div class="filmstrip">
+      <!-- generado por js/script.js -->
+    </div>
+  </div>
+  <div class="tab-panel" id="tab-resenas">
+    <p style="color:var(--text-dim)">Aquí aparecerán las reseñas que hayas escrito.</p>
+  </div>
+  <div class="tab-panel" id="tab-listas">
+    <p style="color:var(--text-dim)">Aquí aparecerán tus listas personales.</p>
+  </div>
+</div>
+
+<footer class="site">
+  <div class="wrap">
+    Reelio — proyecto universitario, Entrega 1 (interfaz estática, sin backend).
+  </div>
+</footer>
+
+<script src="js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crear cuenta — Reelio</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap site-bar">
+    <a href="index.html" class="brand">reel<span>io</span></a>
+    <nav class="primary">
+      <a href="index.html">Catálogo</a>
+      <a href="index.html#listas">Listas</a>
+      <a href="perfil.html">Estadísticas</a>
+    </nav>
+    <div class="auth-links">
+      <a href="login.html" class="btn ghost">Iniciar sesión</a>
+    </div>
+  </div>
+</header>
+
+<div class="form-shell">
+  <h1>Crea tu cuenta</h1>
+  <p class="sub">Empieza a registrar las películas que ves.</p>
+
+  <form onsubmit="return false;">
+    <div class="field">
+      <label for="name">Nombre de usuario</label>
+      <input type="text" id="name" placeholder="tu_usuario" required>
+    </div>
+    <div class="field">
+      <label for="email">Correo electrónico</label>
+      <input type="email" id="email" placeholder="tú@correo.com" required>
+    </div>
+    <div class="field">
+      <label for="password">Contraseña</label>
+      <input type="password" id="password" placeholder="••••••••" required>
+    </div>
+    <button type="submit" class="btn solid">Crear cuenta</button>
+  </form>
+
+  <p class="switch">¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a></p>
+</div>
+
+<script src="js/script.js"></script>
+</body>
+</html>

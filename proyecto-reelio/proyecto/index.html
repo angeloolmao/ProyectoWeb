@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reelio — catálogo de películas</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap site-bar">
+    <a href="index.html" class="brand">reel<span>io</span></a>
+    <nav class="primary">
+      <a href="index.html" class="active">Catálogo</a>
+      <a href="index.html#listas">Listas</a>
+      <a href="perfil.html">Estadísticas</a>
+    </nav>
+    <div class="auth-links">
+      <a href="login.html">Iniciar sesión</a>
+      <a href="register.html" class="btn solid">Crear cuenta</a>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <h1>Lleva el registro de cada película que ves.</h1>
+    <p>Califica, escribe reseñas y arma tus propias listas. Descubre qué está viendo tu círculo antes de elegir qué ver esta noche.</p>
+    <form class="search-row" onsubmit="return false;">
+      <input type="text" id="searchInput" placeholder="Buscar por título…" autocomplete="off">
+      <button class="btn ghost" type="submit">Buscar</button>
+    </form>
+  </div>
+</section>
+
+<section class="block">
+  <div class="wrap">
+    <div class="block-head">
+      <h2>Catálogo</h2>
+      <span class="count" id="resultCount">12 películas</span>
+    </div>
+    <div class="filmstrip" id="catalogGrid">
+      <!-- las tarjetas se generan con js/script.js -->
+    </div>
+  </div>
+</section>
+
+<footer class="site">
+  <div class="wrap">
+    Reelio — proyecto universitario, Entrega 1 (interfaz estática, sin backend).
+  </div>
+</footer>
+
+<script src="js/script.js"></script>
+</body>
+</html>
