@@ -1,4 +1,4 @@
-# Reelio
+# ProyectoWeb
 
 Plataforma social inspirada en servicios como Letterboxd, para registrar películas vistas, calificar, publicar reseñas y descubrir contenido.
 

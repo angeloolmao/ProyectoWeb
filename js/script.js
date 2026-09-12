@@ -1,18 +1,18 @@
 // Reelio — interacciones de interfaz (Entrega 1: sin backend, todo en memoria)
 
 const MOVIES = [
-  { title: "El Largo Adiós", year: 2019, genre: "Drama", rating: 4.2 },
-  { title: "Corredor Nocturno", year: 2021, genre: "Thriller", rating: 3.8 },
-  { title: "Verano en Valparaíso", year: 2017, genre: "Comedia", rating: 4.5 },
-  { title: "La Costa Interior", year: 2020, genre: "Drama", rating: 4.0 },
-  { title: "Estación Sur", year: 2015, genre: "Suspenso", rating: 3.5 },
-  { title: "Mar Adentro Otra Vez", year: 2022, genre: "Drama", rating: 4.7 },
-  { title: "Los Últimos Días de Julio", year: 2018, genre: "Romance", rating: 3.9 },
-  { title: "Ciudad de Vidrio", year: 2023, genre: "Ciencia Ficción", rating: 4.1 },
-  { title: "El Peso del Silencio", year: 2016, genre: "Drama", rating: 4.4 },
-  { title: "Ruta 5", year: 2019, genre: "Aventura", rating: 3.7 },
-  { title: "Noches sin Nombre", year: 2021, genre: "Terror", rating: 3.6 },
-  { title: "Antes del Invierno", year: 2014, genre: "Drama", rating: 4.3 },
+  { title: "Orgullo y Prejuicio", year: 2005, genre: "Romance", rating: 4.6 },
+  { title: "El Padrino", year: 1972, genre: "Drama", rating: 4.9 },
+  { title: "Pulp Fiction", year: 1994, genre: "Crimen", rating: 4.7 },
+  { title: "Titanic", year: 1997, genre: "Romance", rating: 4.3 },
+  { title: "El Señor de los Anillos", year: 2001, genre: "Fantasía", rating: 4.8 },
+  { title: "Interstellar", year: 2014, genre: "Ciencia Ficción", rating: 4.7 },
+  { title: "Parásitos", year: 2019, genre: "Thriller", rating: 4.6 },
+  { title: "La La Land", year: 2016, genre: "Musical", rating: 4.2 },
+  { title: "El Origen", year: 2010, genre: "Ciencia Ficción", rating: 4.5 },
+  { title: "Coco", year: 2017, genre: "Animación", rating: 4.6 },
+  { title: "Joker", year: 2019, genre: "Drama", rating: 4.3 },
+  { title: "Spider-Man: Un Nuevo Universo", year: 2018, genre: "Animación", rating: 4.5 },
 ];
 
 function initials(title) {
