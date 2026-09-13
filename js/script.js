@@ -1,5 +1,3 @@
-// Reelio — interacciones de interfaz (Entrega 1: sin backend, todo en memoria)
-
 const MOVIES = [
   { title: "Orgullo y Prejuicio", year: 2005, genre: "Romance", rating: 4.6 },
   { title: "El Padrino", year: 1972, genre: "Drama", rating: 4.9 },
@@ -47,6 +45,21 @@ function renderCatalog(list, containerId, countId) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  ["searchForm", "loginForm", "registerForm"].forEach(id => {
+    const form = document.getElementById(id);
+    if (form) form.addEventListener("submit", (e) => e.preventDefault());
+  });
+
+  // Menú móvil: alternativa real de navegación, no solo ocultar el nav
+  const navToggle = document.getElementById("navToggle");
+  const primaryNav = document.getElementById("primaryNav");
+  if (navToggle && primaryNav) {
+    navToggle.addEventListener("click", () => {
+      const isOpen = primaryNav.classList.toggle("open");
+      navToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+    });
+  }
+
   // Catálogo en index.html
   if (document.getElementById("catalogGrid")) {
     renderCatalog(MOVIES, "catalogGrid", "resultCount");
