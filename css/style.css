@@ -1,9 +1,3 @@
-/* =========================================================
-   ProyectoWeb — estilos base (v2)
-   Modo oscuro, paleta pizarra/verde azulado
-   Sin dependencias externas (sin Google Fonts ni CDN)
-   ========================================================= */
-
 :root {
   --bg: #0c0a10;
   --surface: #16121d;
@@ -439,10 +433,40 @@ footer.site {
   margin-top: 20px;
 }
 
+.nav-toggle {
+  display: none;
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--text);
+  font-size: 1.1rem;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
 /* ---------- Responsive ---------- */
 
 @media (max-width: 720px) {
-  nav.primary { display: none; }
+  .nav-toggle { display: block; }
+
+  nav.primary {
+    display: none;
+    flex-direction: column;
+    gap: 0;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    background: var(--surface);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+
+  nav.primary.open { display: flex; }
+
+  nav.primary a { padding: 12px 24px; }
+
+  .site-bar { position: relative; flex-wrap: wrap; }
+
   .movie-head { grid-template-columns: 1fr; }
   .stat-row { flex-wrap: wrap; }
   .stat-row div { flex: 1 1 50%; border-right: none; border-bottom: 1px solid var(--line); }
