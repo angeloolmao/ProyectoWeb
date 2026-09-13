@@ -23,34 +23,40 @@
   </div>
 </header>
 
-<section class="hero">
-  <div class="wrap">
-    <h1>Catálogo de Películas</h1>
-    <p>Busca películas, califícalas y escribe reseñas.</p>
-    <form class="search-row" onsubmit="return false;">
-      <input type="text" id="searchInput" placeholder="Buscar por título…" autocomplete="off">
-      <button class="btn ghost" type="submit">Buscar</button>
-    </form>
-  </div>
-</section>
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <h1>Catálogo de Películas</h1>
+      <p>Busca películas, califícalas y escribe reseñas.</p>
+      <form class="search-row" onsubmit="return false;">
+        <input type="text" id="searchInput" placeholder="Buscar por título…" autocomplete="off" aria-label="Buscar película por título">
+        <button class="btn ghost" type="submit">Buscar</button>
+      </form>
+    </div>
+  </section>
 
-<section class="block">
-  <div class="wrap">
-    <div class="block-head">
-      <h2>Catálogo</h2>
-      <span class="count" id="resultCount">12 películas</span>
+  <section class="block">
+    <div class="wrap">
+      <div class="block-head">
+        <h2>Catálogo</h2>
+        <span class="count" id="resultCount">12 películas</span>
+      </div>
+      <div class="filmstrip" id="catalogGrid">
+        <!-- las tarjetas se generan con js/script.js -->
+      </div>
     </div>
-    <div class="filmstrip" id="catalogGrid">
-      <!-- las tarjetas se generan con js/script.js -->
-    </div>
-  </div>
-</section>
+  </section>
+</main>
 
 <footer class="site">
   <div class="wrap">
     ProyectoWeb — plataforma para registrar y calificar películas.
   </div>
 </footer>
+
+<script src="js/script.js"></script>
+</body>
+</html>
 
 <script src="js/script.js"></script>
 </body>
