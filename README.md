@@ -6,16 +6,32 @@ Plataforma social inspirada en servicios como Letterboxd, para registrar pelícu
 
 Foco: interfaz 100% estática (HTML/CSS/JS vanilla, sin backend, sin base de datos), servida con nginx desde un servidor Linux en AWS EC2.
 
+**URL pública:** http://TU_IP_AQUI
+
+## Rutas
+
+| Ruta | Descripción |
+|---|---|
+| `/index.html` | Catálogo de películas con buscador |
+| `/login.html` | Inicio de sesión |
+| `/register.html` | Creación de cuenta |
+| `/pelicula.html` | Detalle de una película, con calificación y reseñas |
+| `/perfil.html` | Perfil del usuario: estadísticas, películas vistas, reseñas y listas |
+| `/listas.html` | Listas personales del usuario |
+| `/admin.html` | Panel de administrador: gestión de películas, usuarios y moderación de contenido |
+
 ## Estructura
 
 ```
-├── index.html      # catálogo y buscador
+├── index.html
 ├── login.html
 ├── register.html
-├── pelicula.html    # detalle de una película + reseñas
-├── perfil.html      # estadísticas y listas del usuario
+├── pelicula.html
+├── perfil.html
+├── listas.html
+├── admin.html
 ├── css/style.css
-└── js/script.js     # datos de ejemplo, buscador, tabs
+└── js/script.js
 ```
 
 ## Cómo verlo localmente
