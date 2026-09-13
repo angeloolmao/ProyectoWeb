@@ -11,9 +11,10 @@
 <header class="site">
   <div class="wrap site-bar">
     <a href="index.html" class="brand">ProyectoWeb</a>
-    <nav class="primary">
+    <button class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false">☰</button>
+    <nav class="primary" id="primaryNav">
       <a href="index.html">Catálogo</a>
-      <a href="index.html#listas">Listas</a>
+      <a href="listas.html">Listas</a>
       <a href="perfil.html">Estadísticas</a>
     </nav>
     <div class="auth-links">
@@ -22,11 +23,12 @@
   </div>
 </header>
 
-<main class="form-shell">
+<main>
+<div class="form-shell">
   <h1>Crea tu cuenta</h1>
   <p class="sub">Empieza a registrar las películas que ves.</p>
 
-  <form onsubmit="return false;">
+  <form id="registerForm">
     <div class="field">
       <label for="name">Nombre de usuario</label>
       <input type="text" id="name" placeholder="tu_usuario" required>
@@ -43,7 +45,12 @@
   </form>
 
   <p class="switch">¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a></p>
+</div>
 </main>
+
+<script src="js/script.js"></script>
+</body>
+</html>
 
 <script src="js/script.js"></script>
 </body>
