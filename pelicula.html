@@ -11,9 +11,10 @@
 <header class="site">
   <div class="wrap site-bar">
     <a href="index.html" class="brand">ProyectoWeb</a>
-    <nav class="primary">
+    <button class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false">☰</button>
+    <nav class="primary" id="primaryNav">
       <a href="index.html" class="active">Catálogo</a>
-      <a href="index.html#listas">Listas</a>
+      <a href="listas.html">Listas</a>
       <a href="perfil.html">Estadísticas</a>
     </nav>
     <div class="auth-links">
@@ -23,7 +24,8 @@
   </div>
 </header>
 
-<main class="wrap">
+<main>
+<div class="wrap">
   <div class="movie-head">
     <div class="poster"><span class="initials">OP</span></div>
     <div class="movie-info">
@@ -57,6 +59,7 @@
       <p>Otra reseña de ejemplo, para verificar el espaciado entre varias reseñas seguidas.</p>
     </div>
   </section>
+</div>
 </main>
 
 <footer class="site">
