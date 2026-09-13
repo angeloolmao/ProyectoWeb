@@ -11,9 +11,10 @@
 <header class="site">
   <div class="wrap site-bar">
     <a href="index.html" class="brand">ProyectoWeb</a>
-    <nav class="primary">
+    <button class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false">☰</button>
+    <nav class="primary" id="primaryNav">
       <a href="index.html" class="active">Catálogo</a>
-      <a href="index.html#listas">Listas</a>
+      <a href="listas.html">Listas</a>
       <a href="perfil.html">Estadísticas</a>
     </nav>
     <div class="auth-links">
@@ -24,28 +25,27 @@
 </header>
 
 <main>
-  <section class="hero">
-    <div class="wrap">
-      <h1>Catálogo de Películas</h1>
-      <p>Busca películas, califícalas y escribe reseñas.</p>
-      <form class="search-row" onsubmit="return false;">
-        <input type="text" id="searchInput" placeholder="Buscar por título…" autocomplete="off" aria-label="Buscar película por título">
-        <button class="btn ghost" type="submit">Buscar</button>
-      </form>
-    </div>
-  </section>
+<section class="hero">
+  <div class="wrap">
+    <h1>Catálogo de Películas</h1>
+    <p>Busca películas, califícalas y escribe reseñas.</p>
+    <form class="search-row" id="searchForm">
+      <input type="text" id="searchInput" aria-label="Buscar película por título" placeholder="Buscar por título…" autocomplete="off">
+      <button class="btn ghost" type="submit">Buscar</button>
+    </form>
+  </div>
+</section>
 
-  <section class="block">
-    <div class="wrap">
-      <div class="block-head">
-        <h2>Catálogo</h2>
-        <span class="count" id="resultCount">12 películas</span>
-      </div>
-      <div class="filmstrip" id="catalogGrid">
-        <!-- las tarjetas se generan con js/script.js -->
-      </div>
+<section class="block">
+  <div class="wrap">
+    <div class="block-head">
+      <h2>Catálogo</h2>
+      <span class="count" id="resultCount">12 películas</span>
     </div>
-  </section>
+    <div class="filmstrip" id="catalogGrid">
+    </div>
+  </div>
+</section>
 </main>
 
 <footer class="site">
@@ -53,10 +53,6 @@
     ProyectoWeb — plataforma para registrar y calificar películas.
   </div>
 </footer>
-
-<script src="js/script.js"></script>
-</body>
-</html>
 
 <script src="js/script.js"></script>
 </body>
