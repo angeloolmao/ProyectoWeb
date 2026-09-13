@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel de administrador — ProyectoWeb</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap site-bar">
+    <a href="index.html" class="brand">ProyectoWeb</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false">☰</button>
+    <nav class="primary" id="primaryNav">
+      <a href="index.html">Catálogo</a>
+      <a href="listas.html">Listas</a>
+      <a href="perfil.html">Estadísticas</a>
+      <a href="admin.html" class="active">Administración</a>
+    </nav>
+    <div class="auth-links">
+      <a href="login.html">Iniciar sesión</a>
+    </div>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+  <section class="block">
+    <div class="block-head">
+      <h2>Panel de administrador</h2>
+    </div>
+    <p style="color:var(--text-dim); max-width:60ch;">
+      Vista de administración: gestión de películas, usuarios y moderación de contenido.
+      Maqueta estática para la Entrega 1, sin backend.
+    </p>
+  </section>
+
+  <section class="block">
+    <div class="block-head">
+      <h2>Administrar películas</h2>
+    </div>
+    <div class="filmstrip">
+      <a href="pelicula.html" class="card">
+        <div class="poster"><span class="initials">OP</span></div>
+        <h3>Orgullo y Prejuicio</h3>
+        <div class="meta">Publicada</div>
+      </a>
+      <a href="pelicula.html" class="card">
+        <div class="poster"><span class="initials">EP</span></div>
+        <h3>El Padrino</h3>
+        <div class="meta">Publicada</div>
+      </a>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="block-head">
+      <h2>Consultar usuarios</h2>
+    </div>
+    <div class="review">
+      <div class="who"><strong>camila_r</strong><span>Activo</span></div>
+    </div>
+    <div class="review">
+      <div class="who"><strong>fmatus</strong><span>Activo</span></div>
+    </div>
+    <div class="review">
+      <div class="who"><strong>carlos_p</strong><span>Suspendido</span></div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="block-head">
+      <h2>Moderar contenido</h2>
+    </div>
+    <div class="review">
+      <div class="who"><strong>Reseña reportada — camila_r</strong><span>Pendiente</span></div>
+      <p>Reseña marcada por otro usuario, pendiente de revisión.</p>
+    </div>
+  </section>
+</div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    ProyectoWeb — plataforma para registrar y calificar películas.
+  </div>
+</footer>
+
+<script src="js/script.js"></script>
+</body>
+</html>
