@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Detalle de película — ProyectoWeb</title>
+<title>Crear cuenta — ProyectoWeb</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -12,58 +12,38 @@
   <div class="wrap site-bar">
     <a href="index.html" class="brand">ProyectoWeb</a>
     <nav class="primary">
-      <a href="index.html" class="active">Catálogo</a>
+      <a href="index.html">Catálogo</a>
       <a href="index.html#listas">Listas</a>
       <a href="perfil.html">Estadísticas</a>
     </nav>
     <div class="auth-links">
-      <a href="login.html">Iniciar sesión</a>
-      <a href="register.html" class="btn solid">Crear cuenta</a>
+      <a href="login.html" class="btn ghost">Iniciar sesión</a>
     </div>
   </div>
 </header>
 
-<div class="wrap">
-  <div class="movie-head">
-    <div class="poster"><span class="initials">OP</span></div>
-    <div class="movie-info">
-      <div class="tag">Romance · 2005 · 129 min</div>
-      <h1>Orgullo y Prejuicio</h1>
-      <p class="synopsis">
-        Elizabeth Bennet y el orgulloso Sr. Darcy deben superar sus primeras impresiones
-        en la campiña inglesa. Este texto de sinopsis es un marcador de posición.
-      </p>
+<main class="form-shell">
+  <h1>Crea tu cuenta</h1>
+  <p class="sub">Empieza a registrar las películas que ves.</p>
 
-      <div class="stars" aria-label="Calificación: 4 de 5 estrellas">
-        <span class="on">★</span><span class="on">★</span><span class="on">★</span><span class="on">★</span><span>★</span>
-      </div>
-
-      <div class="actions-row">
-        <button class="btn solid" type="button">Marcar como vista</button>
-        <button class="btn ghost" type="button">Añadir a una lista</button>
-      </div>
+  <form onsubmit="return false;">
+    <div class="field">
+      <label for="name">Nombre de usuario</label>
+      <input type="text" id="name" placeholder="tu_usuario" required>
     </div>
-  </div>
-
-  <section class="block reviews" style="border-bottom:none;">
-    <h2>Reseñas</h2>
-
-    <div class="review">
-      <div class="who"><strong>camila_r</strong><span>hace 3 días</span></div>
-      <p>Marcador de posición de una reseña de ejemplo para probar el diseño de la página.</p>
+    <div class="field">
+      <label for="email">Correo electrónico</label>
+      <input type="email" id="email" placeholder="tú@correo.com" required>
     </div>
-    <div class="review">
-      <div class="who"><strong>fmatus</strong><span>hace 1 semana</span></div>
-      <p>Otra reseña de ejemplo, para verificar el espaciado entre varias reseñas seguidas.</p>
+    <div class="field">
+      <label for="password">Contraseña</label>
+      <input type="password" id="password" placeholder="••••••••" required>
     </div>
-  </section>
-</div>
+    <button type="submit" class="btn solid">Crear cuenta</button>
+  </form>
 
-<footer class="site">
-  <div class="wrap">
-    ProyectoWeb — plataforma para registrar y calificar películas.
-  </div>
-</footer>
+  <p class="switch">¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a></p>
+</main>
 
 <script src="js/script.js"></script>
 </body>
