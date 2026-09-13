@@ -11,9 +11,10 @@
 <header class="site">
   <div class="wrap site-bar">
     <a href="index.html" class="brand">ProyectoWeb</a>
-    <nav class="primary">
+    <button class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false">☰</button>
+    <nav class="primary" id="primaryNav">
       <a href="index.html">Catálogo</a>
-      <a href="index.html#listas">Listas</a>
+      <a href="listas.html">Listas</a>
       <a href="perfil.html">Estadísticas</a>
     </nav>
     <div class="auth-links">
@@ -22,11 +23,12 @@
   </div>
 </header>
 
-<main class="form-shell">
+<main>
+<div class="form-shell">
   <h1>Bienvenido de vuelta</h1>
   <p class="sub">Inicia sesión para ver tus películas y listas.</p>
 
-  <form onsubmit="return false;">
+  <form id="loginForm">
     <div class="field">
       <label for="email">Correo electrónico</label>
       <input type="email" id="email" placeholder="tú@correo.com" required>
@@ -39,7 +41,12 @@
   </form>
 
   <p class="switch">¿No tienes cuenta? <a href="register.html">Regístrate</a></p>
+</div>
 </main>
+
+<script src="js/script.js"></script>
+</body>
+</html>
 
 <script src="js/script.js"></script>
 </body>
