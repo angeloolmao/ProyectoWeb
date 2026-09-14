@@ -6,7 +6,7 @@ Plataforma social inspirada en servicios como Letterboxd, para registrar pelícu
 
 Foco: interfaz 100% estática (HTML/CSS/JS vanilla, sin backend, sin base de datos), servida con nginx desde un servidor Linux en AWS EC2.
 
-**URL pública:** http://http://184.193.217.254
+**URL pública:** http://184.193.217.254
 
 ## Rutas
 
