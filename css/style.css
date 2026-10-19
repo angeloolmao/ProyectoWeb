@@ -200,14 +200,23 @@ section.block {
 .card:hover { border-color: var(--accent); }
 
 .poster {
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 68px;
   flex-shrink: 0;
-  background: var(--bg);
+  background: var(--surface);
   border: 1px solid var(--line);
+  border-radius: 4px;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .poster .initials {
@@ -287,13 +296,17 @@ section.block {
 
 .movie-head {
   display: grid;
-  grid-template-columns: 100px 1fr;
+  grid-template-columns: 120px 1fr;
   gap: 24px;
   padding: 36px 0;
   border-bottom: 1px solid var(--line);
 }
 
-.movie-head .poster { width: 100px; height: 100px; }
+.movie-head .poster {
+  width: 120px;
+  height: 170px;
+  border-radius: 6px;
+}
 .movie-head .poster .initials { font-size: 1.4rem; }
 
 .movie-info .tag {
