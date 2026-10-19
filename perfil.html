@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mi perfil — ProyectoWeb</title>
-<link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi perfil — ProyectoWeb</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 </head>
 <body>
 
@@ -39,22 +40,22 @@
     <div><span class="num">5</span><span class="label">Listas</span></div>
   </div>
 
-  <div class="tabs">
-    <button class="active" data-tab="vistas" type="button">Vistas</button>
-    <button data-tab="resenas" type="button">Reseñas</button>
-    <button data-tab="listas" type="button">Listas</button>
-  </div>
-
-  <div class="tab-panel active" id="tab-vistas">
-    <div class="filmstrip">
-      <!-- generado por js/script.js -->
+  <div x-data="{ tab: 'vistas' }">
+    <div class="tabs">
+      <button :class="{ 'active': tab === 'vistas' }" @click="tab = 'vistas'" type="button">Vistas</button>
+      <button :class="{ 'active': tab === 'resenas' }" @click="tab = 'resenas'" type="button">Reseñas</button>
+      <button :class="{ 'active': tab === 'listas' }" @click="tab = 'listas'" type="button">Listas</button>
     </div>
-  </div>
-  <div class="tab-panel" id="tab-resenas">
-    <p style="color:var(--text-dim)">Aquí aparecerán las reseñas que hayas escrito.</p>
-  </div>
-  <div class="tab-panel" id="tab-listas">
-    <p style="color:var(--text-dim)">Aquí aparecerán tus listas personales.</p>
+
+    <div class="tab-panel" :class="{ 'active': tab === 'vistas' }" x-show="tab === 'vistas'">
+      <div class="filmstrip"></div>
+    </div>
+    <div class="tab-panel" :class="{ 'active': tab === 'resenas' }" x-show="tab === 'resenas'">
+      <p style="color:var(--text-dim)">Aquí aparecerán las reseñas que hayas escrito.</p>
+    </div>
+    <div class="tab-panel" :class="{ 'active': tab === 'listas' }" x-show="tab === 'listas'">
+      <p style="color:var(--text-dim)">Aquí aparecerán tus listas personales.</p>
+    </div>
   </div>
 </div>
 
@@ -64,6 +65,5 @@
   </div>
 </footer>
 
-<script src="js/script.js"></script>
 </body>
 </html>

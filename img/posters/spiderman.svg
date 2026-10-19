@@ -1,0 +1,16 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1f0b2e"/>
+      <stop offset="100%" stop-color="#0c0414"/>
+    </linearGradient>
+  </defs>
+  <rect width="300" height="450" fill="url(#bg)" rx="8"/>
+  <circle cx="150" cy="170" r="70" fill="none" stroke="#ba3cd9" stroke-width="2" stroke-dasharray="4 4" opacity="0.6"/>
+  <text x="150" y="160" font-family="Arial, sans-serif" font-size="38" font-weight="bold" fill="#e999fc" text-anchor="middle">SM</text>
+  <text x="150" y="195" font-family="Arial, sans-serif" font-size="12" letter-spacing="3" fill="#ba3cd9" text-anchor="middle">ANIMACIÓN</text>
+  <rect x="30" y="270" width="240" height="1" fill="#ba3cd9" opacity="0.3"/>
+  <text x="150" y="320" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#ffffff" text-anchor="middle">Spider-Man: Un Nuevo Universo</text>
+  <text x="150" y="350" font-family="Arial, sans-serif" font-size="13" fill="#ba3cd9" text-anchor="middle">2018 · Peter Ramsey</text>
+  <text x="150" y="410" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#e999fc" text-anchor="middle">★ 4.5</text>
+</svg>
