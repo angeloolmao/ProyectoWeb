@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ProyectoWeb — Catálogo de Películas</title>
   <link rel="stylesheet" href="css/style.css">
+  <script type="module" src="js/app.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 </head>
 <body>
@@ -26,24 +27,50 @@
 </header>
 
 <main>
-<section class="hero">
+<section class="hero" x-data="buscadorPeliculas">
   <div class="wrap">
     <h1>Catálogo de Películas</h1>
     <p>Busca películas, califícalas y escribe reseñas.</p>
-    <form class="search-row" id="searchForm">
-      <input type="text" id="searchInput" aria-label="Buscar película por título" placeholder="Buscar por título…" autocomplete="off">
+    <form class="search-row" id="searchForm" @submit.prevent="emitirBusqueda()">
+      <input
+        type="text"
+        id="searchInput"
+        x-model="termino"
+        @input="emitirBusqueda()"
+        aria-label="Buscar película por título"
+        placeholder="Buscar por título…"
+        autocomplete="off">
       <button class="btn ghost" type="submit">Buscar</button>
     </form>
   </div>
 </section>
 
-<section class="block">
+<section class="block" x-data="catalogoPeliculas" @filtrar-catalogo.window="filtrar($event.detail)">
   <div class="wrap">
     <div class="block-head">
       <h2>Catálogo</h2>
-      <span class="count" id="resultCount">12 películas</span>
+      <span class="count" id="resultCount" x-text="textoContador"></span>
     </div>
-    <div class="filmstrip" id="catalogGrid"></div>
+
+    <p x-show="cargando" style="color:var(--text-dim);">Cargando películas…</p>
+    <p x-show="error" x-text="error" style="color:#e57373;"></p>
+    <p x-show="vacio" style="color:var(--text-dim);">No se encontraron películas con ese criterio.</p>
+
+    <div class="filmstrip" id="catalogGrid" x-show="!cargando && !error && !vacio">
+      <template x-for="pelicula in peliculasFiltradas" :key="pelicula.id">
+        <a :href="urlDetalle(pelicula)" class="card">
+          <div class="poster">
+            <img :src="pelicula.posterUrl" :alt="pelicula.title">
+          </div>
+          <div>
+            <h3 x-text="pelicula.title"></h3>
+            <div class="meta">
+              <span x-text="formatearMeta(pelicula)"></span> · <span class="rating" x-text="formatearRating(pelicula)"></span>
+            </div>
+          </div>
+        </a>
+      </template>
+    </div>
   </div>
 </section>
 </main>
