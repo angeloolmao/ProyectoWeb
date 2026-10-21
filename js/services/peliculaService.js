@@ -56,7 +56,7 @@ export default class PeliculaService {
             genre: datosPelicula.genre ? datosPelicula.genre.trim() : 'General',
             rating: Number(rating.toFixed(1)),
             synopsis: datosPelicula.synopsis ? datosPelicula.synopsis.trim() : '',
-            posterUrl: datosPelicula.posterUrl || 'img/posters/el-padrino.svg'
+            posterUrl: datosPelicula.posterUrl || 'img/posters/el-padrino.jpg'
         };
 
         return await this.repository.crear(nuevaPelicula);
