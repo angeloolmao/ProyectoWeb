@@ -21,11 +21,4 @@ export default class Repository {
     async eliminar(id) {
         throw new Error('Método eliminar(id) no implementado');
     }
-
-    // Métodos alternativos en inglés
-    async getAll() { return await this.listar(); }
-    async getById(id) { return await this.obtenerPorId(id); }
-    async create(entidad) { return await this.crear(entidad); }
-    async update(id, cambios) { return await this.editar(id, cambios); }
-    async delete(id) { return await this.eliminar(id); }
 }
