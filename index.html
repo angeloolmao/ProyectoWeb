@@ -10,17 +10,19 @@
 </head>
 <body>
 
-<header class="site">
+<header class="site" x-data="navegacionSitio">
   <div class="wrap site-bar">
     <a href="index.html" class="brand">ProyectoWeb</a>
-    <button class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false">☰</button>
-    <nav class="primary" id="primaryNav">
+    <button class="nav-toggle" id="navToggle" type="button" @click="alternarMenu()" aria-label="Abrir menú" :aria-expanded="menuAbierto">☰</button>
+    <nav class="primary" id="primaryNav" :class="{ 'open': menuAbierto }">
       <a href="index.html" class="active">Catálogo</a>
       <a href="listas.html">Listas</a>
       <a href="perfil.html">Estadísticas</a>
+      <a href="admin.html">Administración</a>
     </nav>
     <div class="auth-links">
-      <a href="login.html">Iniciar sesión</a>
+      <span x-show="usuario" x-text="usuario ? '@' + usuario.username : ''" style="color:var(--text-dim);"></span>
+      <a href="login.html">Cambiar cuenta</a>
       <a href="register.html" class="btn solid">Crear cuenta</a>
     </div>
   </div>

@@ -5,22 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Panel de administrador — ProyectoWeb</title>
   <link rel="stylesheet" href="css/style.css">
+  <script type="module" src="js/app.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 </head>
 <body>
 
-<header class="site">
+<header class="site" x-data="navegacionSitio">
   <div class="wrap site-bar">
     <a href="index.html" class="brand">ProyectoWeb</a>
-    <button class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false">☰</button>
-    <nav class="primary" id="primaryNav">
+    <button class="nav-toggle" id="navToggle" type="button" @click="alternarMenu()" aria-label="Abrir menú" :aria-expanded="menuAbierto">☰</button>
+    <nav class="primary" id="primaryNav" :class="{ 'open': menuAbierto }">
       <a href="index.html">Catálogo</a>
       <a href="listas.html">Listas</a>
       <a href="perfil.html">Estadísticas</a>
       <a href="admin.html" class="active">Administración</a>
     </nav>
     <div class="auth-links">
-      <a href="login.html">Iniciar sesión</a>
+      <span x-show="usuario" x-text="usuario ? '@' + usuario.username : ''" style="color:var(--text-dim);"></span>
+      <a href="login.html">Cambiar cuenta</a>
     </div>
   </div>
 </header>
@@ -32,51 +34,122 @@
       <h2>Panel de administrador</h2>
     </div>
     <p style="color:var(--text-dim); max-width:60ch;">
-      Vista de administración: gestión de películas, usuarios y moderación de contenido.
-      Maqueta estática para la Entrega 1, sin backend.
+      Gestión del catálogo de películas, estado de usuarios y moderación de reseñas reportadas.
     </p>
   </section>
 
-  <section class="block">
+  <section class="block" x-data="adminPeliculas">
     <div class="block-head">
       <h2>Administrar películas</h2>
+      <span class="count" x-text="peliculas.length + ' películas'"></span>
     </div>
-    <div class="filmstrip">
-      <a href="pelicula.html" class="card">
-        <div class="poster"><span class="initials">OP</span></div>
-        <h3>Orgullo y Prejuicio</h3>
-        <div class="meta">Publicada</div>
-      </a>
-      <a href="pelicula.html" class="card">
-        <div class="poster"><span class="initials">EP</span></div>
-        <h3>El Padrino</h3>
-        <div class="meta">Publicada</div>
-      </a>
+
+    <form @submit.prevent="guardarPelicula()" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px; margin-bottom:24px; background:var(--surface); padding:16px; border:1px solid var(--line);">
+      <div class="field" style="margin:0;">
+        <label for="tituloPelicula">Título</label>
+        <input id="tituloPelicula" type="text" x-model="formulario.title" placeholder="Título de la película" required>
+      </div>
+      <div class="field" style="margin:0;">
+        <label for="anioPelicula">Año</label>
+        <input id="anioPelicula" type="number" x-model="formulario.year" min="1888" max="2030" required>
+      </div>
+      <div class="field" style="margin:0;">
+        <label for="generoPelicula">Género</label>
+        <input id="generoPelicula" type="text" x-model="formulario.genre" placeholder="Drama, Crimen…" required>
+      </div>
+      <div class="field" style="margin:0;">
+        <label for="posterPelicula">Ruta Póster</label>
+        <input id="posterPelicula" type="text" x-model="formulario.posterUrl" placeholder="img/posters/el-padrino.jpg">
+      </div>
+      <div class="field" style="margin:0; grid-column: 1 / -1;">
+        <label for="sinopsisPelicula">Sinopsis</label>
+        <input id="sinopsisPelicula" type="text" x-model="formulario.synopsis" placeholder="Descripción breve de la película">
+      </div>
+      <div class="actions-row" style="grid-column: 1 / -1;">
+        <button type="submit" class="btn solid" x-text="textoBotonFormulario"></button>
+        <button type="button" class="btn ghost" x-show="editandoId" @click="cancelarEdicion()">Cancelar edición</button>
+      </div>
+    </form>
+
+    <p x-show="cargando" style="color:var(--text-dim);">Cargando películas…</p>
+    <p x-show="error" x-text="error" style="color:#e57373;"></p>
+    <p x-show="mensajeExito" x-text="mensajeExito" style="color:var(--accent);"></p>
+    <p x-show="vacio" style="color:var(--text-dim);">No hay películas registradas en el catálogo.</p>
+
+    <div class="filmstrip" x-show="!cargando && !vacio">
+      <template x-for="pelicula in peliculas" :key="pelicula.id">
+        <div class="card" style="flex-direction:column; align-items:stretch;">
+          <div style="display:flex; gap:12px; align-items:center;">
+            <div class="poster">
+              <img :src="pelicula.posterUrl" :alt="pelicula.title">
+            </div>
+            <div>
+              <h3 x-text="pelicula.title"></h3>
+              <div class="meta" x-text="pelicula.year + ' · ' + pelicula.genre"></div>
+            </div>
+          </div>
+          <div class="actions-row" style="margin-top:8px;">
+            <button type="button" class="btn ghost" @click="iniciarEdicion(pelicula)" style="padding:4px 10px; font-size:0.78rem;">Editar</button>
+            <button type="button" class="btn ghost" @click="eliminarPelicula(pelicula.id)" style="padding:4px 10px; font-size:0.78rem;">Eliminar</button>
+          </div>
+        </div>
+      </template>
     </div>
   </section>
 
-  <section class="block">
+  <section class="block" x-data="adminUsuarios">
     <div class="block-head">
       <h2>Consultar usuarios</h2>
+      <span class="count" x-text="usuarios.length + ' usuarios'"></span>
     </div>
-    <div class="review">
-      <div class="who"><strong>camila_r</strong><span>Activo</span></div>
-    </div>
-    <div class="review">
-      <div class="who"><strong>fmatus</strong><span>Activo</span></div>
-    </div>
-    <div class="review">
-      <div class="who"><strong>carlos_p</strong><span>Suspendido</span></div>
+
+    <p x-show="cargando" style="color:var(--text-dim);">Cargando usuarios…</p>
+    <p x-show="error" x-text="error" style="color:#e57373;"></p>
+    <p x-show="vacio" style="color:var(--text-dim);">No hay usuarios registrados.</p>
+
+    <div x-show="!cargando && !vacio">
+      <template x-for="u in usuarios" :key="u.id">
+        <div class="review" style="display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <strong x-text="u.username"></strong>
+            <span style="color:var(--text-dim); font-size:0.85rem; margin-left:8px;" x-text="u.email + ' · ' + textoEstado(u)"></span>
+          </div>
+          <button
+            type="button"
+            class="btn ghost"
+            @click="alternarEstado(u)"
+            x-text="textoBotonEstado(u)"
+            style="padding:4px 10px; font-size:0.78rem;"></button>
+        </div>
+      </template>
     </div>
   </section>
 
-  <section class="block">
+  <section class="block" x-data="adminModeracion">
     <div class="block-head">
       <h2>Moderar contenido</h2>
+      <span class="count" x-text="reportadas.length + ' pendientes'"></span>
     </div>
-    <div class="review">
-      <div class="who"><strong>Reseña reportada — camila_r</strong><span>Pendiente</span></div>
-      <p>Reseña marcada por otro usuario, pendiente de revisión.</p>
+
+    <p x-show="cargando" style="color:var(--text-dim);">Cargando reportes…</p>
+    <p x-show="error" x-text="error" style="color:#e57373;"></p>
+    <p x-show="mensaje" x-text="mensaje" style="color:var(--accent);"></p>
+    <p x-show="vacio" style="color:var(--text-dim);">No hay reseñas reportadas pendientes de moderación.</p>
+
+    <div x-show="!cargando && !vacio">
+      <template x-for="r in reportadas" :key="r.id">
+        <div class="review">
+          <div class="who">
+            <strong x-text="'Reseña reportada — ' + r.username"></strong>
+            <span>Pendiente</span>
+          </div>
+          <p x-text="r.texto"></p>
+          <div class="actions-row">
+            <button type="button" class="btn ghost" @click="aprobarResena(r.id)" style="padding:4px 10px; font-size:0.78rem;">Mantener reseña</button>
+            <button type="button" class="btn solid" @click="eliminarResenaModerada(r.id)" style="padding:4px 10px; font-size:0.78rem;">Eliminar reseña</button>
+          </div>
+        </div>
+      </template>
     </div>
   </section>
 </div>

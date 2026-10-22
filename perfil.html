@@ -5,21 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mi perfil — ProyectoWeb</title>
   <link rel="stylesheet" href="css/style.css">
+  <script type="module" src="js/app.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 </head>
 <body>
 
-<header class="site">
+<header class="site" x-data="navegacionSitio">
   <div class="wrap site-bar">
     <a href="index.html" class="brand">ProyectoWeb</a>
-    <button class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false">☰</button>
-    <nav class="primary" id="primaryNav">
+    <button class="nav-toggle" id="navToggle" type="button" @click="alternarMenu()" aria-label="Abrir menú" :aria-expanded="menuAbierto">☰</button>
+    <nav class="primary" id="primaryNav" :class="{ 'open': menuAbierto }">
       <a href="index.html">Catálogo</a>
       <a href="listas.html">Listas</a>
       <a href="perfil.html" class="active">Estadísticas</a>
+      <a href="admin.html">Administración</a>
     </nav>
     <div class="auth-links">
-      <a href="login.html">Iniciar sesión</a>
+      <span x-show="usuario" x-text="usuario ? '@' + usuario.username : ''" style="color:var(--text-dim);"></span>
+      <a href="login.html">Cambiar cuenta</a>
       <a href="register.html" class="btn solid">Crear cuenta</a>
     </div>
   </div>
@@ -27,38 +30,114 @@
 
 <main>
 <div class="wrap">
-  <div class="profile-head">
-    <div class="avatar">CaP</div>
+  <section x-data="cabeceraPerfil">
+    <p x-show="cargando" style="color:var(--text-dim); padding:20px 0;">Cargando perfil…</p>
+    <p x-show="error" x-text="error" style="color:#e57373;"></p>
+    <p x-show="vacio" style="color:var(--text-dim);">No hay una sesión activa.</p>
+
+    <div class="profile-head" x-show="usuario && !cargando" style="justify-content:space-between; flex-wrap:wrap;">
+      <div style="display:flex; align-items:center; gap:16px;">
+        <div class="avatar" x-text="inicialesAvatar"></div>
+        <div x-show="!editando">
+          <h1 x-text="usuario ? usuario.name : ''"></h1>
+          <div class="sub" x-text="subtituloMiembro"></div>
+          <p x-show="usuario && usuario.bio" x-text="usuario ? usuario.bio : ''" style="color:var(--text-dim); font-size:0.88rem; margin:6px 0 0;"></p>
+        </div>
+        <form x-show="editando" @submit.prevent="guardarPerfil()" style="display:grid; gap:8px;">
+          <input type="text" x-model="nombreForm" aria-label="Nombre para mostrar" style="background:var(--surface); border:1px solid var(--line); color:var(--text); padding:6px 8px;">
+          <input type="text" x-model="bioForm" aria-label="Biografía del perfil" placeholder="Tu biografía cinéfila" style="background:var(--surface); border:1px solid var(--line); color:var(--text); padding:6px 8px;">
+          <div class="actions-row">
+            <button type="submit" class="btn solid" style="padding:4px 10px; font-size:0.8rem;">Guardar</button>
+            <button type="button" class="btn ghost" @click="cancelarEdicion()" style="padding:4px 10px; font-size:0.8rem;">Cancelar</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="actions-row" style="align-items:center;">
+        <button type="button" class="btn ghost" x-show="!editando" @click="abrirEdicion()">Editar perfil</button>
+      </div>
+    </div>
+    <p x-show="mensaje" x-text="mensaje" style="color:var(--accent); font-size:0.88rem; margin:0 0 12px;"></p>
+  </section>
+
+  <section x-data="estadisticasPerfil" @perfil-actualizado.window="cargarEstadisticas()">
+    <p x-show="cargando" style="color:var(--text-dim);">Calculando estadísticas…</p>
+    <p x-show="error" x-text="error" style="color:#e57373;"></p>
+
+    <div class="stat-row" x-show="!cargando">
+      <div>
+        <span class="num" x-text="estadisticas.totalVistas"></span>
+        <span class="label">Vistas</span>
+      </div>
+      <div>
+        <span class="num" x-text="estadisticas.totalResenas"></span>
+        <span class="label">Reseñas</span>
+      </div>
+      <div>
+        <span class="num" x-text="estadisticas.promedioCalificaciones"></span>
+        <span class="label">Promedio</span>
+      </div>
+      <div>
+        <span class="num" x-text="estadisticas.totalListas"></span>
+        <span class="label">Listas</span>
+      </div>
+    </div>
+
     <div>
-      <h1>Carlos Peña</h1>
-      <div class="sub">Miembro desde 2026</div>
-    </div>
-  </div>
+      <div class="tabs">
+        <button :class="{ 'active': esTab('vistas') }" @click="cambiarTab('vistas')" type="button">Vistas</button>
+        <button :class="{ 'active': esTab('resenas') }" @click="cambiarTab('resenas')" type="button">Reseñas</button>
+        <button :class="{ 'active': esTab('listas') }" @click="cambiarTab('listas')" type="button">Listas</button>
+      </div>
 
-  <div class="stat-row">
-    <div><span class="num">48</span><span class="label">Vistas</span></div>
-    <div><span class="num">31</span><span class="label">Reseñas</span></div>
-    <div><span class="num">4.2</span><span class="label">Promedio</span></div>
-    <div><span class="num">5</span><span class="label">Listas</span></div>
-  </div>
+      <div class="tab-panel" :class="{ 'active': esTab('vistas') }" x-show="esTab('vistas')">
+        <p x-show="vacioVistas" style="color:var(--text-dim);">Aún no has marcado películas como vistas.</p>
+        <div class="filmstrip" x-show="!vacioVistas">
+          <template x-for="pelicula in estadisticas.peliculasVistas" :key="pelicula.id">
+            <a :href="urlDetalle(pelicula)" class="card">
+              <div class="poster">
+                <img :src="pelicula.posterUrl" :alt="pelicula.title">
+              </div>
+              <div>
+                <h3 x-text="pelicula.title"></h3>
+                <div class="meta" x-text="formatearMeta(pelicula)"></div>
+              </div>
+            </a>
+          </template>
+        </div>
+      </div>
 
-  <div x-data="{ tab: 'vistas' }">
-    <div class="tabs">
-      <button :class="{ 'active': tab === 'vistas' }" @click="tab = 'vistas'" type="button">Vistas</button>
-      <button :class="{ 'active': tab === 'resenas' }" @click="tab = 'resenas'" type="button">Reseñas</button>
-      <button :class="{ 'active': tab === 'listas' }" @click="tab = 'listas'" type="button">Listas</button>
-    </div>
+      <div class="tab-panel" :class="{ 'active': esTab('resenas') }" x-show="esTab('resenas')">
+        <p x-show="vacioResenas" style="color:var(--text-dim);">Aquí aparecerán las reseñas que hayas escrito.</p>
+        <div x-show="!vacioResenas">
+          <template x-for="resena in estadisticas.resenas" :key="resena.id">
+            <div class="review">
+              <div class="who">
+                <a :href="urlPeliculaId(resena.peliculaId)"><strong x-text="'Película #' + resena.peliculaId"></strong></a>
+                <span x-text="resena.fecha"></span>
+              </div>
+              <p x-text="resena.texto"></p>
+            </div>
+          </template>
+        </div>
+      </div>
 
-    <div class="tab-panel" :class="{ 'active': tab === 'vistas' }" x-show="tab === 'vistas'">
-      <div class="filmstrip"></div>
+      <div class="tab-panel" :class="{ 'active': esTab('listas') }" x-show="esTab('listas')">
+        <p x-show="vacioListas" style="color:var(--text-dim);">Aquí aparecerán tus listas personales.</p>
+        <div class="filmstrip" x-show="!vacioListas">
+          <template x-for="lista in estadisticas.listas" :key="lista.id">
+            <a href="listas.html" class="card">
+              <div class="poster"><span class="initials">LS</span></div>
+              <div>
+                <h3 x-text="lista.nombre"></h3>
+                <div class="meta" x-text="(lista.peliculaIds ? lista.peliculaIds.length : 0) + ' películas'"></div>
+              </div>
+            </a>
+          </template>
+        </div>
+      </div>
     </div>
-    <div class="tab-panel" :class="{ 'active': tab === 'resenas' }" x-show="tab === 'resenas'">
-      <p style="color:var(--text-dim)">Aquí aparecerán las reseñas que hayas escrito.</p>
-    </div>
-    <div class="tab-panel" :class="{ 'active': tab === 'listas' }" x-show="tab === 'listas'">
-      <p style="color:var(--text-dim)">Aquí aparecerán tus listas personales.</p>
-    </div>
-  </div>
+  </section>
 </div>
 </main>
 
