@@ -1,4 +1,4 @@
-// Datos iniciales de películas y usuarios de ejemplo
+// Datos iniciales para poblar el repositorio cuando aún no existen registros
 
 export const PELICULAS_INICIALES = [
     {
@@ -124,7 +124,105 @@ export const PELICULAS_INICIALES = [
 ];
 
 export const USUARIOS_INICIALES = [
-    { id: 1, username: "carlos_p", name: "Carlos Peña", email: "carlos@correo.com", password: "123", role: "user", memberSince: 2026, watchedIds: [1, 2, 3, 5, 6, 7] },
-    { id: 2, username: "camila_r", name: "Camila Rojas", email: "camila@correo.com", password: "123", role: "user", memberSince: 2026, watchedIds: [1, 4, 8, 10] },
-    { id: 3, username: "fmatus", name: "Felipe Matus", email: "fmatus@correo.com", password: "123", role: "admin", memberSince: 2026, watchedIds: [2, 3, 6, 9, 11] }
+    {
+        id: 1,
+        username: "carlos_p",
+        name: "Carlos Peña",
+        email: "carlos@correo.com",
+        password: "123",
+        role: "admin",
+        active: true,
+        memberSince: 2026,
+        bio: "Cinéfilo y coleccionista de clásicos.",
+        watchedIds: [1, 2, 3, 5, 6, 7]
+    },
+    {
+        id: 2,
+        username: "camila_r",
+        name: "Camila Rojas",
+        email: "camila@correo.com",
+        password: "123",
+        role: "user",
+        active: true,
+        memberSince: 2026,
+        bio: "Amante del cine de romance y animación.",
+        watchedIds: [1, 4, 8, 10]
+    },
+    {
+        id: 3,
+        username: "fmatus",
+        name: "Felipe Matus",
+        email: "fmatus@correo.com",
+        password: "123",
+        role: "admin",
+        active: true,
+        memberSince: 2026,
+        bio: "Crítico de ciencia ficción y suspenso.",
+        watchedIds: [2, 3, 6, 9, 11]
+    }
+];
+
+export const SESION_INICIAL = [
+    { id: 1, usuarioId: 1 }
+];
+
+export const RESENAS_INICIALES = [
+    {
+        id: 1,
+        peliculaId: 1,
+        usuarioId: 2,
+        username: "camila_r",
+        texto: "Fotografía hermosa y actuaciones memorables de principio a fin.",
+        fecha: "2026-10-16",
+        reportada: false
+    },
+    {
+        id: 2,
+        peliculaId: 1,
+        usuarioId: 1,
+        username: "carlos_p",
+        texto: "Una adaptación ágil con una banda sonora inolvidable.",
+        fecha: "2026-10-18",
+        reportada: false
+    },
+    {
+        id: 3,
+        peliculaId: 2,
+        usuarioId: 3,
+        username: "fmatus",
+        texto: "Obra maestra absoluta del cine dramático.",
+        fecha: "2026-10-15",
+        reportada: true
+    }
+];
+
+export const CALIFICACIONES_INICIALES = [
+    { id: 1, peliculaId: 1, usuarioId: 1, puntaje: 4 },
+    { id: 2, peliculaId: 2, usuarioId: 1, puntaje: 5 },
+    { id: 3, peliculaId: 6, usuarioId: 1, puntaje: 5 },
+    { id: 4, peliculaId: 1, usuarioId: 2, puntaje: 5 }
+];
+
+export const LISTAS_INICIALES = [
+    {
+        id: 1,
+        usuarioId: 1,
+        nombre: "Favoritas",
+        descripcion: "Películas que volvería a ver mil veces",
+        peliculaIds: [1, 2, 5, 6]
+    },
+    {
+        id: 2,
+        usuarioId: 1,
+        nombre: "Para ver el fin de semana",
+        descripcion: "Pendientes recomendadas",
+        peliculaIds: [7, 9, 12]
+    },
+    {
+        id: 3,
+        usuarioId: 1,
+        nombre: "Cine con amigos",
+        descripcion: "Ideales para maratón grupal",
+        peliculaIds: [3, 10, 11]
+    }
 ];
