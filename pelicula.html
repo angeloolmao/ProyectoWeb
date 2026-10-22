@@ -5,21 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Detalle de película — ProyectoWeb</title>
   <link rel="stylesheet" href="css/style.css">
+  <script type="module" src="js/app.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 </head>
 <body>
 
-<header class="site">
+<header class="site" x-data="navegacionSitio">
   <div class="wrap site-bar">
     <a href="index.html" class="brand">ProyectoWeb</a>
-    <button class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false">☰</button>
-    <nav class="primary" id="primaryNav">
+    <button class="nav-toggle" id="navToggle" type="button" @click="alternarMenu()" aria-label="Abrir menú" :aria-expanded="menuAbierto">☰</button>
+    <nav class="primary" id="primaryNav" :class="{ 'open': menuAbierto }">
       <a href="index.html" class="active">Catálogo</a>
       <a href="listas.html">Listas</a>
       <a href="perfil.html">Estadísticas</a>
+      <a href="admin.html">Administración</a>
     </nav>
     <div class="auth-links">
-      <a href="login.html">Iniciar sesión</a>
+      <span x-show="usuario" x-text="usuario ? '@' + usuario.username : ''" style="color:var(--text-dim);"></span>
+      <a href="login.html">Cambiar cuenta</a>
       <a href="register.html" class="btn solid">Crear cuenta</a>
     </div>
   </div>
@@ -27,39 +30,133 @@
 
 <main>
 <div class="wrap">
-  <div class="movie-head">
-    <div class="poster">
-      <img src="img/posters/orgullo-y-prejuicio.jpg" alt="Póster Orgullo y Prejuicio">
-    </div>
-    <div class="movie-info">
-      <div class="tag">Romance · 2005 · 129 min</div>
-      <h1>Orgullo y Prejuicio</h1>
-      <p class="synopsis">
-        Elizabeth Bennet y el orgulloso Sr. Darcy deben superar sus primeras impresiones
-        en la campiña inglesa. Este texto de sinopsis es un marcador de posición.
-      </p>
+  <section x-data="detallePelicula" @calificacion-actualizada.window="cargarDetalle()">
+    <p x-show="cargando" style="color:var(--text-dim); padding:24px 0;">Cargando información de la película…</p>
+    <p x-show="error" x-text="error" style="color:#e57373; padding:12px 0;"></p>
+    <p x-show="vacio" style="color:var(--text-dim); padding:24px 0;">No se encontró la película solicitada.</p>
 
-      <div class="stars" aria-label="Calificación: 4 de 5 estrellas">
-        <span class="on">★</span><span class="on">★</span><span class="on">★</span><span class="on">★</span><span>★</span>
+    <div class="movie-head" x-show="pelicula && !cargando">
+      <div class="poster">
+        <img :src="pelicula ? pelicula.posterUrl : 'img/posters/orgullo-y-prejuicio.jpg'" :alt="pelicula ? pelicula.title : 'Póster'">
       </div>
+      <div class="movie-info">
+        <div class="tag" x-text="etiquetaPelicula"></div>
+        <h1 x-text="pelicula ? pelicula.title : ''"></h1>
+        <p class="synopsis" x-text="pelicula ? pelicula.synopsis : ''"></p>
 
-      <div class="actions-row">
-        <button class="btn solid" type="button">Marcar como vista</button>
-        <button class="btn ghost" type="button">Añadir a una lista</button>
+        <div x-data="calificacionPelicula" style="margin-bottom:18px;">
+          <p x-show="cargando" style="color:var(--text-dim); font-size:0.85rem;">Cargando calificación…</p>
+          <p x-show="error" x-text="error" style="color:#e57373; font-size:0.85rem;"></p>
+
+          <div class="stars" aria-label="Calificar película de 1 a 5 estrellas" style="margin-bottom:6px;">
+            <template x-for="valor in estrellas" :key="valor">
+              <button
+                type="button"
+                @click="seleccionarEstrella(valor)"
+                :class="{ 'on': estrellaActiva(valor) }"
+                style="background:none; border:none; font-size:1.35rem; cursor:pointer; padding:0 3px; color:inherit;">★</button>
+            </template>
+            <button
+              type="button"
+              x-show="miPuntaje > 0"
+              @click="quitarCalificacion()"
+              class="btn ghost"
+              style="padding:2px 8px; font-size:0.75rem; margin-left:8px;">Quitar</button>
+          </div>
+          <div style="font-size:0.84rem; color:var(--text-dim);" x-text="resumenCalificacion"></div>
+        </div>
+
+        <div class="actions-row">
+          <button class="btn solid" type="button" @click="alternarVista()" x-text="textoBotonVista"></button>
+          <button class="btn ghost" type="button" @click="alternarSelectorLista()">Añadir a una lista</button>
+        </div>
+
+        <div x-show="selectorListaAbierto" style="margin-top:14px; display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+          <select
+            x-model="listaSeleccionadaId"
+            aria-label="Seleccionar lista personal"
+            style="background:var(--surface); border:1px solid var(--line); color:var(--text); padding:8px 10px;">
+            <template x-for="lista in listasUsuario" :key="lista.id">
+              <option :value="lista.id" x-text="lista.nombre"></option>
+            </template>
+          </select>
+          <button type="button" class="btn solid" @click="confirmarAgregarALista()">Confirmar</button>
+        </div>
+
+        <p x-show="mensajeAccion" x-text="mensajeAccion" style="color:var(--accent); font-size:0.88rem; margin-top:10px;"></p>
       </div>
     </div>
-  </div>
+  </section>
 
-  <section class="block reviews" style="border-bottom:none;">
-    <h2>Reseñas</h2>
-
-    <div class="review">
-      <div class="who"><strong>camila_r</strong><span>hace 3 días</span></div>
-      <p>Marcador de posición de una reseña de ejemplo para probar el diseño de la página.</p>
+  <section class="block reviews" style="border-bottom:none;" x-data="resenasPelicula">
+    <div class="block-head">
+      <h2>Reseñas</h2>
+      <span class="count" x-text="resenas.length + ' reseñas'"></span>
     </div>
-    <div class="review">
-      <div class="who"><strong>fmatus</strong><span>hace 1 semana</span></div>
-      <p>Otra reseña de ejemplo, para verificar el espaciado entre varias reseñas seguidas.</p>
+
+    <form @submit.prevent="publicarResena()" style="margin-bottom:24px;">
+      <div class="field">
+        <label for="nuevaResena">Escribe tu reseña</label>
+        <textarea
+          id="nuevaResena"
+          rows="3"
+          x-model="nuevoTexto"
+          placeholder="Comparte tu opinión sobre esta película (mínimo 5 caracteres)…"
+          style="width:100%; background:var(--surface); border:1px solid var(--line); color:var(--text); padding:10px; font-family:var(--sans);"></textarea>
+      </div>
+      <button type="submit" class="btn solid">Publicar reseña</button>
+    </form>
+
+    <p x-show="cargando" style="color:var(--text-dim);">Cargando reseñas…</p>
+    <p x-show="error" x-text="error" style="color:#e57373;"></p>
+    <p x-show="mensaje" x-text="mensaje" style="color:var(--accent);"></p>
+    <p x-show="vacio" style="color:var(--text-dim);">Aún no hay reseñas para esta película. ¡Sé el primero en opinar!</p>
+
+    <div x-show="!cargando && !vacio">
+      <template x-for="resena in resenas" :key="resena.id">
+        <div class="review">
+          <div class="who">
+            <strong x-text="resena.username"></strong>
+            <span x-text="resena.fecha"></span>
+          </div>
+
+          <p x-show="editandoId !== resena.id" x-text="resena.texto"></p>
+
+          <div x-show="editandoId === resena.id" style="margin:10px 0;">
+            <textarea
+              rows="2"
+              x-model="textoEdicion"
+              aria-label="Editar texto de reseña"
+              style="width:100%; background:var(--surface); border:1px solid var(--line); color:var(--text); padding:8px; font-family:var(--sans); margin-bottom:8px;"></textarea>
+            <div class="actions-row">
+              <button type="button" class="btn solid" @click="guardarEdicion(resena.id)">Guardar</button>
+              <button type="button" class="btn ghost" @click="cancelarEdicion()">Cancelar</button>
+            </div>
+          </div>
+
+          <div class="actions-row" style="margin-top:8px;">
+            <button
+              type="button"
+              class="btn ghost"
+              x-show="esPropietario(resena) && editandoId !== resena.id"
+              @click="iniciarEdicion(resena)"
+              style="padding:4px 10px; font-size:0.78rem;">Editar</button>
+            <button
+              type="button"
+              class="btn ghost"
+              x-show="esPropietario(resena)"
+              @click="eliminarResena(resena.id)"
+              style="padding:4px 10px; font-size:0.78rem;">Eliminar</button>
+            <button
+              type="button"
+              class="btn ghost"
+              x-show="!esPropietario(resena) && !resena.reportada"
+              @click="reportarResena(resena.id)"
+              style="padding:4px 10px; font-size:0.78rem;">Reportar</button>
+            <span x-show="resena.reportada" style="font-size:0.78rem; color:var(--text-dim);">Reportada</span>
+          </div>
+        </div>
+      </template>
     </div>
   </section>
 </div>

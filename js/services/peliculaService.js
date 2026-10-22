@@ -1,10 +1,17 @@
 // Servicio con la lógica de negocio para gestionar películas
+
 export default class PeliculaService {
     constructor(repository) {
         if (!repository) {
             throw new Error('PeliculaService requiere un repositorio válido');
         }
         this.repository = repository;
+    }
+
+    _validarRolAdmin(usuarioActual) {
+        if (usuarioActual !== undefined && (!usuarioActual || usuarioActual.role !== 'admin')) {
+            throw new Error('Operación restringida a administradores');
+        }
     }
 
     async listar() {
@@ -33,8 +40,9 @@ export default class PeliculaService {
         return todas.filter(p => p.genre.toLowerCase() === genero.toLowerCase());
     }
 
-    async crear(datosPelicula) {
-        // Validación de campos obligatorios
+    async crear(datosPelicula, usuarioActual) {
+        this._validarRolAdmin(usuarioActual);
+
         if (!datosPelicula.title || datosPelicula.title.trim() === '') {
             throw new Error('El título de la película es obligatorio');
         }
@@ -50,10 +58,13 @@ export default class PeliculaService {
             throw new Error('La calificación debe estar entre 1.0 y 5.0');
         }
 
+        const duracion = datosPelicula.duration ? Number(datosPelicula.duration) : 120;
+
         const nuevaPelicula = {
             title: datosPelicula.title.trim(),
             year: anio,
-            genre: datosPelicula.genre ? datosPelicula.genre.trim() : 'General',
+            genre: datosPelicula.genre ? datosPelicula.genre.trim() : 'Drama',
+            duration: isNaN(duracion) || duracion <= 0 ? 120 : duracion,
             rating: Number(rating.toFixed(1)),
             synopsis: datosPelicula.synopsis ? datosPelicula.synopsis.trim() : '',
             posterUrl: datosPelicula.posterUrl || 'img/posters/el-padrino.jpg'
@@ -62,8 +73,9 @@ export default class PeliculaService {
         return await this.repository.crear(nuevaPelicula);
     }
 
-    async editar(id, cambios) {
-        // Validaciones condicionales según el campo modificado
+    async editar(id, cambios, usuarioActual) {
+        this._validarRolAdmin(usuarioActual);
+
         if (cambios.title !== undefined && (!cambios.title || cambios.title.trim() === '')) {
             throw new Error('El título no puede estar vacío');
         }
@@ -87,7 +99,8 @@ export default class PeliculaService {
         return await this.repository.editar(id, cambios);
     }
 
-    async eliminar(id) {
+    async eliminar(id, usuarioActual) {
+        this._validarRolAdmin(usuarioActual);
         return await this.repository.eliminar(id);
     }
 }

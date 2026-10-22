@@ -5,18 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Crear cuenta — ProyectoWeb</title>
   <link rel="stylesheet" href="css/style.css">
+  <script type="module" src="js/app.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 </head>
 <body>
 
-<header class="site">
+<header class="site" x-data="navegacionSitio">
   <div class="wrap site-bar">
     <a href="index.html" class="brand">ProyectoWeb</a>
-    <button class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false">☰</button>
-    <nav class="primary" id="primaryNav">
+    <button class="nav-toggle" id="navToggle" type="button" @click="alternarMenu()" aria-label="Abrir menú" :aria-expanded="menuAbierto">☰</button>
+    <nav class="primary" id="primaryNav" :class="{ 'open': menuAbierto }">
       <a href="index.html">Catálogo</a>
       <a href="listas.html">Listas</a>
       <a href="perfil.html">Estadísticas</a>
+      <a href="admin.html">Administración</a>
     </nav>
     <div class="auth-links">
       <a href="login.html" class="btn ghost">Iniciar sesión</a>
@@ -25,22 +27,26 @@
 </header>
 
 <main>
-<div class="form-shell">
+<div class="form-shell" x-data="registroUsuario">
   <h1>Crea tu cuenta</h1>
   <p class="sub">Empieza a registrar las películas que ves.</p>
 
-  <form id="registerForm">
+  <p x-show="cargando" style="color:var(--text-dim);">Creando cuenta…</p>
+  <p x-show="error" x-text="error" style="color:#e57373;"></p>
+  <p x-show="mensajeExito" x-text="mensajeExito" style="color:var(--accent);"></p>
+
+  <form id="registerForm" @submit.prevent="enviarRegistro()">
     <div class="field">
       <label for="name">Nombre de usuario</label>
-      <input type="text" id="name" placeholder="tu_usuario" required>
+      <input type="text" id="name" x-model="username" placeholder="tu_usuario" required>
     </div>
     <div class="field">
       <label for="email">Correo electrónico</label>
-      <input type="email" id="email" placeholder="tú@correo.com" required>
+      <input type="email" id="email" x-model="email" placeholder="tú@correo.com" required>
     </div>
     <div class="field">
       <label for="password">Contraseña</label>
-      <input type="password" id="password" placeholder="••••••••" required>
+      <input type="password" id="password" x-model="password" placeholder="••••••••" required>
     </div>
     <button type="submit" class="btn solid">Crear cuenta</button>
   </form>

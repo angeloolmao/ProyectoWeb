@@ -5,21 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mis listas — ProyectoWeb</title>
   <link rel="stylesheet" href="css/style.css">
+  <script type="module" src="js/app.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 </head>
 <body>
 
-<header class="site">
+<header class="site" x-data="navegacionSitio">
   <div class="wrap site-bar">
     <a href="index.html" class="brand">ProyectoWeb</a>
-    <button class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false">☰</button>
-    <nav class="primary" id="primaryNav">
+    <button class="nav-toggle" id="navToggle" type="button" @click="alternarMenu()" aria-label="Abrir menú" :aria-expanded="menuAbierto">☰</button>
+    <nav class="primary" id="primaryNav" :class="{ 'open': menuAbierto }">
       <a href="index.html">Catálogo</a>
       <a href="listas.html" class="active">Listas</a>
       <a href="perfil.html">Estadísticas</a>
+      <a href="admin.html">Administración</a>
     </nav>
     <div class="auth-links">
-      <a href="login.html">Iniciar sesión</a>
+      <span x-show="usuario" x-text="usuario ? '@' + usuario.username : ''" style="color:var(--text-dim);"></span>
+      <a href="login.html">Cambiar cuenta</a>
       <a href="register.html" class="btn solid">Crear cuenta</a>
     </div>
   </div>
@@ -27,28 +30,104 @@
 
 <main>
 <div class="wrap">
-  <section class="block">
+  <section class="block" x-data="formularioLista" style="border-bottom:1px solid var(--line);">
+    <div class="block-head">
+      <h2>Crear nueva lista</h2>
+    </div>
+    <form @submit.prevent="crearNuevaLista()" style="display:grid; gap:12px; max-width:520px;">
+      <div class="field" style="margin-bottom:0;">
+        <label for="nombreLista">Nombre de la lista</label>
+        <input id="nombreLista" type="text" x-model="nombre" placeholder="Ej. Clásicos de ciencia ficción" required>
+      </div>
+      <div class="field" style="margin-bottom:0;">
+        <label for="descLista">Descripción</label>
+        <input id="descLista" type="text" x-model="descripcion" placeholder="Breve descripción de la lista">
+      </div>
+      <div>
+        <button type="submit" class="btn solid">Crear lista</button>
+      </div>
+      <p x-show="cargando" style="color:var(--text-dim); margin:0;">Guardando lista…</p>
+      <p x-show="error" x-text="error" style="color:#e57373; margin:0;"></p>
+      <p x-show="mensaje" x-text="mensaje" style="color:var(--accent); margin:0;"></p>
+    </form>
+  </section>
+
+  <section class="block" x-data="listasUsuario" @lista-actualizada.window="cargarListas()">
     <div class="block-head">
       <h2>Mis listas</h2>
-      <span class="count">3 listas</span>
+      <span class="count" x-text="textoContador"></span>
     </div>
 
-    <div class="filmstrip">
-      <a href="index.html" class="card">
-        <div class="poster"><span class="initials">FV</span></div>
-        <h3>Favoritas</h3>
-        <div class="meta">8 películas</div>
-      </a>
-      <a href="index.html" class="card">
-        <div class="poster"><span class="initials">PV</span></div>
-        <h3>Para ver</h3>
-        <div class="meta">12 películas</div>
-      </a>
-      <a href="index.html" class="card">
-        <div class="poster"><span class="initials">CN</span></div>
-        <h3>Cine con amigos</h3>
-        <div class="meta">5 películas</div>
-      </a>
+    <p x-show="cargando" style="color:var(--text-dim);">Cargando listas…</p>
+    <p x-show="error" x-text="error" style="color:#e57373;"></p>
+    <p x-show="mensaje" x-text="mensaje" style="color:var(--accent);"></p>
+    <p x-show="vacio" style="color:var(--text-dim);">Aún no tienes listas creadas. Utiliza el formulario superior para crear la primera.</p>
+
+    <div x-show="!cargando && !vacio" style="display:grid; gap:20px;">
+      <template x-for="lista in listas" :key="lista.id">
+        <div style="background:var(--surface); border:1px solid var(--line); border-left:3px solid var(--accent); padding:16px;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap; margin-bottom:12px;">
+            <div style="display:flex; gap:12px; align-items:center;">
+              <div class="poster"><span class="initials" x-text="lista.iniciales"></span></div>
+              <div x-show="editandoId !== lista.id">
+                <h3 style="margin:0 0 4px;" x-text="lista.nombre"></h3>
+                <div class="meta" style="color:var(--text-dim); font-size:0.85rem;">
+                  <span x-text="lista.cantidadTexto"></span>
+                  <span x-show="lista.descripcion" x-text="' · ' + lista.descripcion"></span>
+                </div>
+              </div>
+              <div x-show="editandoId === lista.id" style="display:grid; gap:8px;">
+                <input type="text" x-model="nombreEdicion" aria-label="Editar nombre de lista" style="background:var(--bg); border:1px solid var(--line); color:var(--text); padding:6px 8px;">
+                <input type="text" x-model="descripcionEdicion" aria-label="Editar descripción de lista" style="background:var(--bg); border:1px solid var(--line); color:var(--text); padding:6px 8px;">
+                <div class="actions-row">
+                  <button type="button" class="btn solid" @click="guardarEdicion(lista.id)" style="padding:4px 10px; font-size:0.8rem;">Guardar</button>
+                  <button type="button" class="btn ghost" @click="cancelarEdicion()" style="padding:4px 10px; font-size:0.8rem;">Cancelar</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="actions-row">
+              <button type="button" class="btn ghost" x-show="editandoId !== lista.id" @click="iniciarEdicion(lista)" style="padding:5px 10px; font-size:0.8rem;">Renombrar</button>
+              <button type="button" class="btn ghost" @click="eliminarLista(lista.id)" style="padding:5px 10px; font-size:0.8rem;">Eliminar</button>
+            </div>
+          </div>
+
+          <div class="filmstrip" x-show="lista.peliculas.length > 0" style="margin-bottom:12px;">
+            <template x-for="pelicula in lista.peliculas" :key="pelicula.id">
+              <div class="card" style="justify-content:space-between;">
+                <a :href="urlDetalle(pelicula)" style="display:flex; gap:10px; align-items:center; text-decoration:none;">
+                  <div class="poster">
+                    <img :src="pelicula.posterUrl" :alt="pelicula.title">
+                  </div>
+                  <div>
+                    <h3 x-text="pelicula.title"></h3>
+                    <div class="meta" x-text="pelicula.year + ' · ' + pelicula.genre"></div>
+                  </div>
+                </a>
+                <button
+                  type="button"
+                  class="btn ghost"
+                  @click="quitarPeliculaDeLista(lista.id, pelicula.id)"
+                  aria-label="Quitar película de la lista"
+                  style="padding:4px 8px; font-size:0.75rem;">✕</button>
+              </div>
+            </template>
+          </div>
+
+          <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+            <select
+              x-model="peliculaParaAgregar[lista.id]"
+              aria-label="Seleccionar película para añadir a la lista"
+              style="background:var(--bg); border:1px solid var(--line); color:var(--text); padding:7px 10px;">
+              <option value="">Seleccionar película…</option>
+              <template x-for="p in catalogoPeliculas" :key="p.id">
+                <option :value="p.id" x-text="p.title + ' (' + p.year + ')'"></option>
+              </template>
+            </select>
+            <button type="button" class="btn ghost" @click="agregarPeliculaALista(lista.id)" style="padding:6px 12px; font-size:0.82rem;">+ Añadir película</button>
+          </div>
+        </div>
+      </template>
     </div>
   </section>
 </div>
