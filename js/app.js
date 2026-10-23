@@ -96,3 +96,7 @@ if (window.Alpine) {
 } else {
     document.addEventListener('alpine:init', registrarComponentes);
 }
+
+if("serviceWorker" in navigator){
+    navigator.serviceWorker.register("sw.js");
+}
