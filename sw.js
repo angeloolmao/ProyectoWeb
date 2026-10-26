@@ -1,5 +1,5 @@
-const NOMBRE = "proyectoweb-n1";
-const ARCHIVOS =[ 
+const NOMBRE = "proyectoweb-n2";
+const ARCHIVOS = [ 
 "css/style.css",
 "index.html",
 "admin.html",
@@ -23,6 +23,7 @@ const ARCHIVOS =[
 "js/services/peliculaService.js",
 "js/services/resenaService.js",
 "js/services/usuarioService.js",
+"js/controllers/conexionController.js",
 "manifest.json",
 "img/icons/icon-192.png",
 "img/icons/icon-512.png",
