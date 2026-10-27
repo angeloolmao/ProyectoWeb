@@ -9,6 +9,7 @@ import CalificacionService from './services/calificacionService.js';
 import ListaService from './services/listaService.js';
 import EstadisticaService from './services/estadisticaService.js';
 
+
 import {
     buscadorPeliculasController,
     catalogoPeliculasController,
@@ -45,6 +46,12 @@ import {
     CALIFICACIONES_INICIALES,
     LISTAS_INICIALES
 } from './data/seed.js';
+
+import {
+    conexionController
+} from './controllers/conexionController.js';
+
+
 
 // Instanciación única de repositorios
 const peliculaRepository = new LocalStorageRepository('pw_peliculas', PELICULAS_INICIALES);
@@ -89,10 +96,16 @@ function registrarComponentes() {
 
     window.Alpine.data('formularioLista', () => formularioListaController(listaService, usuarioService));
     window.Alpine.data('listasUsuario', () => listasUsuarioController(listaService, peliculaService, usuarioService));
+
+    window.Alpine.data('estadoConexion', () => conexionController());
 }
 
 if (window.Alpine) {
     registrarComponentes();
 } else {
     document.addEventListener('alpine:init', registrarComponentes);
+}
+
+if("serviceWorker" in navigator){
+    navigator.serviceWorker.register("sw.js");
 }

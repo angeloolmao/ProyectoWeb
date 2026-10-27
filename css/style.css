@@ -557,7 +557,6 @@ a:focus-visible, button:focus-visible {
 }
 
 
-
 /* Ajustes generales para la cabecera */
 .site-bar {
   gap: 12px;
@@ -604,10 +603,7 @@ a:focus-visible, button:focus-visible {
   .auth-links {
     gap: 8px;
   }
-
-  
 }
-
 
 /* Pantallas de 901px a 1080px */
 @media (min-width: 901px) and (max-width: 1080px) {
@@ -617,4 +613,19 @@ a:focus-visible, button:focus-visible {
   }
 }
 
+/* Oculta elementos hasta que estén listos */
+[x-cloak] {
+  display: none !important;
+}
+
+/* Aviso de conexión */
+.aviso-conexion {
+  background-color: var(--surface);
+  color: var(--text-dim);
+  border-left: 4px solid var(--accent);
+  border-bottom: 1px solid var(--line);
+  padding: 12px 16px;
+  text-align: center;
+  font-size: 0.95rem;
+}
 
