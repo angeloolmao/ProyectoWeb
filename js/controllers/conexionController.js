@@ -2,7 +2,7 @@
 
 export function conexionController(){
     return {
-        enLinea: navigator.online,
+        enLinea: navigator.onLine,
         conectar(){
             this.enLinea = true;
         },

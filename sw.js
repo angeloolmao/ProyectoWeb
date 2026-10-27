@@ -1,4 +1,4 @@
-const NOMBRE = "proyectoweb-n2";
+const NOMBRE = "proyectoweb-n3";
 const ARCHIVOS = [ 
 "css/style.css",
 "index.html",
@@ -52,7 +52,7 @@ self.addEventListener("install", (event) => {
 
 self.addEventListener( "fetch", (event) =>{
     event.respondWith(
-        caches.match(event.request).then((respuesta) => {
+        caches.match(event.request, { ignoreSearch: true }).then((respuesta) => {
             return respuesta || fetch(event.request);
     
         })
