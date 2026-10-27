@@ -29,6 +29,15 @@
   </div>
 </header>
 
+<div x-data="estadoConexion"
+     x-show="!enLinea"
+     x-cloak
+     @online.window="conectar()"
+     @offline.window="desconectar()"
+     class="aviso-conexion">
+     Sin conexión: estás viendo la versión guardada
+</div>
+
 <main>
 <div class="wrap">
   <section x-data="detallePelicula" @calificacion-actualizada.window="cargarDetalle()">
