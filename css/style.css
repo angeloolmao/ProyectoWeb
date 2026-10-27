@@ -456,44 +456,169 @@ footer.site {
   cursor: pointer;
 }
 
-/* ---------- Responsive ---------- */
 
-@media (max-width: 720px) {
-  .nav-toggle { display: block; }
+/* ---------- Responsive: mobile first ---------- */
 
-  nav.primary {
+/* Estilos base: celular */
+.nav-toggle {
+  display: block;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+nav.primary {
+  display: none;
+  flex-direction: column;
+  gap: 0;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  z-index: 10;
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+nav.primary.open {
+  display: flex;
+}
+
+nav.primary a {
+  padding: 12px 24px;
+  min-height: 44px;
+}
+
+.site-bar {
+  position: relative;
+  flex-wrap: wrap;
+}
+
+.movie-head {
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.stat-row {
+  flex-wrap: wrap;
+}
+
+.stat-row div {
+  flex: 1 1 50%;
+  border-right: none;
+  border-bottom: 1px solid var(--line);
+}
+
+/* Adaptaciones para pantallas más grandes */
+@media (min-width: 721px) {
+  .nav-toggle {
     display: none;
-    flex-direction: column;
-    gap: 0;
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 100%;
-    background: var(--surface);
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
   }
 
-  nav.primary.open { display: flex; }
+  nav.primary {
+    display: flex;
+    flex-direction: row;
+    position: static;
+    border: none;
+  }
 
-  nav.primary a { padding: 12px 24px; }
+  nav.primary a {
+    padding: 6px 12px;
+  }
 
-  .site-bar { position: relative; flex-wrap: wrap; }
+  .site-bar {
+    flex-wrap: nowrap;
+  }
 
-  .movie-head { grid-template-columns: 1fr; }
-  .stat-row { flex-wrap: wrap; }
-  .stat-row div { flex: 1 1 50%; border-right: none; border-bottom: 1px solid var(--line); }
+  .movie-head {
+    grid-template-columns: 120px 1fr;
+    gap: 24px;
+  }
+
+  .stat-row {
+    flex-wrap: nowrap;
+  }
+
+  .stat-row div {
+    flex: 1;
+    border-bottom: none;
+    border-right: 1px solid var(--line);
+  }
+
+  .stat-row div:last-child {
+    border-right: none;
+  }
 }
+
 
 a:focus-visible, button:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
+
+/* Ajustes generales para la cabecera */
+.site-bar {
+  gap: 12px;
+}
+
+.brand {
+  flex-shrink: 0;
+}
+
+.auth-links {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* Celulares pequeños */
+@media (max-width: 420px) {
+  .wrap {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .site-bar {
+    column-gap: 8px;
+  }
+
+  .brand {
+    font-size: 1.1rem;
+  }
+
+  .auth-links {
+    max-width: 100%;
+    font-size: 0.82rem;
+  }
+}
+
+/* Pantallas medianas */
+@media (min-width: 421px) and (max-width: 900px) {
+  .site-bar {
+    padding-right: 8px;
+    padding-left: 8px;
+  }
+
+  .auth-links {
+    gap: 8px;
+  }
+}
+
+/* Pantallas de 901px a 1080px */
+@media (min-width: 901px) and (max-width: 1080px) {
+  .site-bar {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+/* Oculta elementos hasta que estén listos */
 [x-cloak] {
   display: none !important;
 }
 
+/* Aviso de conexión */
 .aviso-conexion {
   background-color: var(--surface);
   color: var(--text-dim);
@@ -503,3 +628,4 @@ a:focus-visible, button:focus-visible {
   text-align: center;
   font-size: 0.95rem;
 }
+
