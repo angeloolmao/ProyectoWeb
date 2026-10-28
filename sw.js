@@ -1,5 +1,6 @@
-const NOMBRE = "proyectoweb-n3";
+const NOMBRE = "proyectoweb-n4";
 const ARCHIVOS = [ 
+"./",
 "css/style.css",
 "index.html",
 "admin.html",
@@ -46,6 +47,19 @@ self.addEventListener("install", (event) => {
     event.waitUntil( 
         caches.open(NOMBRE).then((cache) =>{
            return cache.addAll(ARCHIVOS); 
+        })
+    );
+});
+
+// Borra los cachés de versiones anteriores
+self.addEventListener("activate", (event) => {
+    event.waitUntil(
+        caches.keys().then((nombres) => {
+            return Promise.all(
+                nombres
+                    .filter((nombre) => nombre !== NOMBRE)
+                    .map((nombre) => caches.delete(nombre))
+            );
         })
     );
 });
