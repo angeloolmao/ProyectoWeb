@@ -40,8 +40,8 @@ La aplicación está estructurada en capas desacopladas usando módulos ES (`typ
 Vista HTML (Alpine.js x-data) ──► Controlador (js/controllers/) ──► Servicio (js/services/) ──► Repositorio (js/repositories/)
 ```
 
-- **Punto único de composición (`js/app.js`):** Único archivo donde se instancian los repositorios (`new LocalStorageRepository(...)`), se inyectan en los servicios por constructor (Principio de Inversión de Dependencias, **DIP**) y se registran los componentes con `Alpine.data(...)`.
-- **Contrato de persistencia asíncrono (`js/repositories/Repository.js`):** Clase base con métodos `async` (`listar`, `obtenerPorId`, `crear`, `editar`, `eliminar`) extendida por `LocalStorageRepository.js`, aislando el uso de `localStorage` exclusivamente en la capa de repositorio.
+- **Punto único de composición (`js/app.js`):** Único archivo donde se crean las instancias de los repositorios, se inyectan en los servicios por constructor (Principio de Inversión de Dependencias, **DIP**) y se registran los componentes con `Alpine.data(...)`.
+- **Contrato de persistencia asíncrono (`js/repositories/Repository.js`):** Clase base con métodos `async` (`listar`, `obtenerPorId`, `crear`, `editar`, `eliminar`) extendida por `LocalStorageRepository.js`, de modo que el acceso al almacenamiento del navegador queda aislado exclusivamente en la capa de repositorio.
 - **Comunicación entre componentes:** Las vistas se dividen en componentes `x-data` independientes que se comunican mediante eventos personalizados (`$dispatch` y `@evento.window`).
 
 ### Mapa de dominios
