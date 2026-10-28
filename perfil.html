@@ -123,7 +123,7 @@
           <template x-for="resena in estadisticas.resenas" :key="resena.id">
             <div class="review">
               <div class="who">
-                <a :href="urlPeliculaId(resena.peliculaId)"><strong x-text="'Película #' + resena.peliculaId"></strong></a>
+                <a :href="urlPeliculaId(resena.peliculaId)"><strong x-text="resena.peliculaTitulo"></strong></a>
                 <span x-text="resena.fecha"></span>
               </div>
               <p x-text="resena.texto"></p>
@@ -137,10 +137,10 @@
         <div class="filmstrip" x-show="!vacioListas">
           <template x-for="lista in estadisticas.listas" :key="lista.id">
             <a href="listas.html" class="card">
-              <div class="poster"><span class="initials">LS</span></div>
+              <div class="poster"><span class="initials" x-text="lista.iniciales"></span></div>
               <div>
                 <h3 x-text="lista.nombre"></h3>
-                <div class="meta" x-text="(lista.peliculaIds ? lista.peliculaIds.length : 0) + ' películas'"></div>
+                <div class="meta" x-text="lista.cantidad + ' películas'"></div>
               </div>
             </a>
           </template>
