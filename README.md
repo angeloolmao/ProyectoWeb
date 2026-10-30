@@ -3,7 +3,9 @@
 Plataforma social de cine inspirada en Letterboxd para explorar el catálogo de películas, registrar películas vistas, calificar en escala de 1 a 5 estrellas, publicar y moderar reseñas, y organizar listas personales.
 
 **URL pública (AWS EC2):** http://184.193.217.254
-**Link Drive Video Presentación:** https://drive.google.com/drive/folders/1El0HDOQbQmIjzmuxlUDjOyfefek7J0zS?usp=sharing
+
+**Link Drive Video Presentación:** 
+https://drive.google.com/drive/folders/1El0HDOQbQmIjzmuxlUDjOyfefek7J0zS?usp=sharing
 ---
 
 ## 1. Vistas y rutas de la aplicación
