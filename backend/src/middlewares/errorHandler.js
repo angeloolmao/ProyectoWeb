@@ -8,21 +8,21 @@ export default function errorHandler(err, req, res, next) {
         return res.status(400).json({ error: 'JSON mal formado en el cuerpo de la petición' });
     }
 
-    // Errores de validación de Mongoose
+    // Errores de validación del esquema de datos
     if (err.name === 'ValidationError') {
         const mensajes = Object.values(err.errors || {}).map(e => e.message);
         return res.status(400).json({ error: mensajes.join('. ') || 'Datos inválidos' });
     }
 
-    // ID o tipo inválido en Mongoose
+    // Identificador o tipo de dato inválido
     if (err.name === 'CastError') {
         return res.status(400).json({ error: 'Formato de identificador o dato inválido' });
     }
 
     // Índice único duplicado en MongoDB
     if (err.code === 11000) {
-        const campo = Object.keys(err.keyPattern || {})[0] || 'campo';
-        return res.status(409).json({ error: `Ya existe un registro con ese ${campo}` });
+        const campos = Object.keys(err.keyPattern || {}).join(', ') || 'campo';
+        return res.status(409).json({ error: `Ya existe un registro con el mismo valor de: ${campos}` });
     }
 
     // Errores de negocio lanzados por los servicios
