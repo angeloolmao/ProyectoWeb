@@ -70,3 +70,28 @@ export function fechaIso(valor, campo) {
     }
     return valor;
 }
+
+export function emailValido(valor, campo = 'email') {
+    if (typeof valor !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valor.trim())) {
+        throw new AppError(`El campo ${campo} debe ser un correo válido`, 400);
+    }
+    return valor.trim().toLowerCase();
+}
+
+export function claveValida(valor) {
+    if (typeof valor !== 'string' || valor.length < 6 || valor.length > 72) {
+        throw new AppError('La contraseña debe tener entre 6 y 72 caracteres', 400);
+    }
+    return valor;
+}
+
+export function listaDeIds(valor, campo) {
+    if (!Array.isArray(valor)) {
+        throw new AppError(`El campo ${campo} debe ser una lista de identificadores`, 400);
+    }
+    const ids = valor.map(v => numeroEnRango(v, campo, 1, MAX_ENTERO, true));
+    if (new Set(ids).size !== ids.length) {
+        throw new AppError(`El campo ${campo} no puede tener elementos repetidos`, 409);
+    }
+    return ids;
+}

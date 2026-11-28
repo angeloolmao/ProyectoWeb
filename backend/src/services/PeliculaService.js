@@ -31,6 +31,13 @@ export default class PeliculaService {
         this.repository = repository;
     }
 
+    // Regla de rol: solo un administrador modifica el catálogo
+    _exigirAdmin(usuario) {
+        if (!usuario || usuario.role !== 'admin') {
+            throw new AppError('Operación restringida a administradores', 403);
+        }
+    }
+
     // Valida el cuerpo; si es completo exige los campos obligatorios y completa los opcionales
     _procesar(datos, completo) {
         validarCuerpo(datos);
@@ -60,11 +67,23 @@ export default class PeliculaService {
         return pelicula;
     }
 
-    async crear(datos) {
+    // Lanza 400 si alguno de los ids no corresponde a una película existente
+    async verificarExisten(ids) {
+        if (ids.length === 0) return;
+        const existentes = new Set((await this.repository.listar()).map(p => Number(p.id)));
+        const faltante = ids.find(id => !existentes.has(Number(id)));
+        if (faltante !== undefined) {
+            throw new AppError(`La película ${faltante} no existe`, 400);
+        }
+    }
+
+    async crear(datos, usuario) {
+        this._exigirAdmin(usuario);
         return this.repository.crear(this._procesar(datos, true));
     }
 
-    async reemplazar(id, datos) {
+    async reemplazar(id, datos, usuario) {
+        this._exigirAdmin(usuario);
         const idNumerico = validarId(id);
         const pelicula = await this.repository.reemplazar(idNumerico, this._procesar(datos, true));
         if (!pelicula) {
@@ -73,7 +92,8 @@ export default class PeliculaService {
         return pelicula;
     }
 
-    async actualizar(id, cambios) {
+    async actualizar(id, cambios, usuario) {
+        this._exigirAdmin(usuario);
         const idNumerico = validarId(id);
         const pelicula = await this.repository.editar(idNumerico, this._procesar(cambios, false));
         if (!pelicula) {
@@ -82,7 +102,8 @@ export default class PeliculaService {
         return pelicula;
     }
 
-    async eliminar(id) {
+    async eliminar(id, usuario) {
+        this._exigirAdmin(usuario);
         const eliminada = await this.repository.eliminar(validarId(id));
         if (!eliminada) {
             throw new AppError('Película no encontrada', 404);
