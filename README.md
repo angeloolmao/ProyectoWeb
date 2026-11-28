@@ -1,139 +1,163 @@
 # ProyectoWeb
 
-Plataforma social de cine inspirada en Letterboxd para explorar el catálogo de películas, registrar películas vistas, calificar en escala de 1 a 5 estrellas, publicar y moderar reseñas, y organizar listas personales.
+Plataforma social de películas (estilo Letterboxd) con frontend en Alpine.js y backend API REST en Node.js, Express, MongoDB (Mongoose) y autenticación JWT.
 
-**URL pública (AWS EC2):** http://184.193.217.254
+- **URL pública (IP elástica AWS EC2):** http://184.193.217.254
+- **Verificación de la API:** http://184.193.217.254/api/salud
+- **Video de presentación:** *(pendiente: pegar link antes del cierre)*
 
 **Link Drive Video Presentación:** 
 https://drive.google.com/drive/folders/1El0HDOQbQmIjzmuxlUDjOyfefek7J0zS?usp=sharing
 ---
 
-## 1. Vistas y rutas de la aplicación
+## 1. Usuario de prueba
 
-| Ruta | Vista | Operaciones principales |
-|---|---|---|
-| `/index.html` | Catálogo de películas | Listado de películas con pósters, metadatos y buscador reactivo por título |
-| `/pelicula.html?id=1` | Detalle de película | Ficha técnica, calificación de 1 a 5 estrellas, marcar como vista, añadir a lista y CRUD de reseñas propias |
-| `/listas.html` | Mis listas | Crear, renombrar y eliminar listas personales; añadir y quitar películas sin duplicados |
-| `/perfil.html` | Perfil y estadísticas | Edición de nombre y biografía, métricas calculadas en vivo y pestañas de Vistas, Reseñas y Listas |
-| `/login.html` | Iniciar sesión | Autenticación contra el repositorio de usuarios y botones de acceso rápido de prueba |
-| `/register.html` | Crear cuenta | Registro de nuevos usuarios con validación de correo y nombre de usuario único |
-| `/admin.html` | Panel de administración | CRUD de películas del catálogo, suspensión/reactivación de usuarios y moderación de reseñas reportadas |
+Para probar el login en `POST /api/auth/login` o desde `/login.html`:
+
+| Rol | Correo | Contraseña | Usuario |
+|---|---|---|---|
+| Administrador | `carlos@correo.com` | `123` | `carlos_p` |
+| Usuario | `camila@correo.com` | `123` | `camila_r` |
 
 ---
 
-## 2. Cuentas de prueba
+## 2. Diagrama de arquitectura
 
-En `/login.html` puedes ingresar manualmente o usar los botones de acceso rápido:
-
-| Rol | Usuario | Correo | Contraseña | Permisos |
-|---|---|---|---|---|
-| **Administrador** | `carlos_p` | `carlos@correo.com` | `123` | Acceso completo + gestión de películas, usuarios y moderación en `/admin.html` |
-| **Usuario** | `camila_r` | `camila@correo.com` | `123` | Calificar, marcar vistas, gestionar sus listas y editar/eliminar sus propias reseñas |
-| **Administrador** | `fmatus` | `fmatus@correo.com` | `123` | Acceso completo y moderación |
-
----
-
-## 3. Arquitectura MVC por dominio y principios SOLID
-
-La aplicación está estructurada en capas desacopladas usando módulos ES (`type="module"`) y **Alpine.js** para las vistas reactivas:
-
-```
-Vista HTML (Alpine.js x-data) ──► Controlador (js/controllers/) ──► Servicio (js/services/) ──► Repositorio (js/repositories/)
-```
-
-- **Punto único de composición (`js/app.js`):** Único archivo donde se crean las instancias de los repositorios, se inyectan en los servicios por constructor (Principio de Inversión de Dependencias, **DIP**) y se registran los componentes con `Alpine.data(...)`.
-- **Contrato de persistencia asíncrono (`js/repositories/Repository.js`):** Clase base con métodos `async` (`listar`, `obtenerPorId`, `crear`, `editar`, `eliminar`) extendida por `LocalStorageRepository.js`, de modo que el acceso al almacenamiento del navegador queda aislado exclusivamente en la capa de repositorio.
-- **Comunicación entre componentes:** Las vistas se dividen en componentes `x-data` independientes que se comunican mediante eventos personalizados (`$dispatch` y `@evento.window`).
-
-### Mapa de dominios
-
-| Dominio | Vistas (`x-data`) | Controlador (`js/controllers/`) | Servicio (`js/services/`) | Clave de Repositorio |
-|---|---|---|---|---|
-| **Películas** | `buscadorPeliculas`, `catalogoPeliculas`, `detallePelicula`, `adminPeliculas` | `peliculaController.js` | `peliculaService.js` | `pw_peliculas` |
-| **Usuarios y Sesión** | `navegacionSitio`, `loginUsuario`, `registroUsuario`, `cabeceraPerfil`, `adminUsuarios` | `usuarioController.js` | `usuarioService.js` | `pw_usuarios`, `pw_sesion` |
-| **Estadísticas** | `estadisticasPerfil` | `usuarioController.js` | `estadisticaService.js` | *(Calculado desde películas, reseñas, calificaciones y listas)* |
-| **Reseñas y Moderación** | `resenasPelicula`, `adminModeracion` | `resenaController.js` | `resenaService.js` | `pw_resenas` |
-| **Calificaciones** | `calificacionPelicula` | `calificacionController.js` | `calificacionService.js` | `pw_calificaciones` |
-| **Listas personales** | `formularioLista`, `listasUsuario` | `listaController.js` | `listaService.js` | `pw_listas` |
-| **Estado de conexión** | `estadoConexion` | `conexionController.js` | — | Eventos `online` / `offline` del navegador |
-
----
-
-## 4. Estructura del proyecto
-
-```
-├── index.html
-├── pelicula.html
-├── listas.html
-├── perfil.html
-├── login.html
-├── register.html
-├── admin.html
-├── manifest.json
-├── sw.js
-├── css/
-│   └── style.css
-├── img/
-│   ├── icons/
-│   │   ├── icon-192.png
-│   │   └── icon-512.png
-│   └── posters/
-│       └── (*.jpg — pósters del catálogo)
-└── js/
-    ├── app.js
-    ├── data/
-    │   └── seed.js
-    ├── repositories/
-    │   ├── Repository.js
-    │   └── LocalStorageRepository.js
-    ├── services/
-    │   ├── peliculaService.js
-    │   ├── usuarioService.js
-    │   ├── resenaService.js
-    │   ├── calificacionService.js
-    │   ├── listaService.js
-    │   └── estadisticaService.js
-    └── controllers/
-        ├── peliculaController.js
-        ├── usuarioController.js
-        ├── resenaController.js
-        ├── calificacionController.js
-        ├── listaController.js
-        └── conexionController.js
+```text
++-----------------------+
+|  Navegador (Cliente)  |
+|  HTML + Alpine.js     |
+|  ApiRepository (fetch)|
++-----------+-----------+
+            |  HTTP (mismo origen: / y /api/*)
+            v
++-----------------------+
+|   Nginx (puerto 80)   |
+|  /      -> estáticos  |
+|  /api/  -> proxy_pass |
++-----------+-----------+
+            |  http://127.0.0.1:3000
+            v
++-------------------------------------------------------------+
+|            Backend Node.js + Express (systemd)              |
+|                                                             |
+|  server.js -> app.js (Composition Root)                     |
+|    -> logger -> autenticar (JWT)                            |
+|    -> Ruta (src/routes/)                                    |
+|    -> Servicio (src/services/)     [reglas de negocio]      |
+|    -> Repositorio (src/repositories/) [contrato async]      |
+|    -> Modelo (src/models/)         [esquemas Mongoose]      |
+|    -> notFound (404) -> errorHandler (4 parámetros)         |
++-----------------------------+-------------------------------+
+                              |  MONGODB_URI
+                              v
+                  +-----------------------+
+                  |     MongoDB Atlas     |
+                  +-----------------------+
 ```
 
 ---
 
-## 5. PWA y funcionamiento Offline
+## 3. Variables de entorno
 
-- **Web App Manifest (`manifest.json`):** Configurado con `"display": "standalone"` e íconos de `192x192` y `512x512` píxeles.
-- **Service Worker (`sw.js`):** Precarga en el evento `install` todas las vistas HTML, hojas de estilo, módulos JS, pósters y el script de Alpine.js desde el CDN. Limpia versiones antiguas de caché en `activate` y responde con estrategia *cache-first* (`ignoreSearch: true`) en `fetch`.
-- **Indicador de conexión:** Todas las vistas muestran una barra de aviso reactiva cuando el navegador pierde conexión (`offline`) y la ocultan automáticamente al reconectarse (`online`).
+Las credenciales viven fuera del código en `backend/.env` (ignorado en `.gitignore`). La plantilla sin secretos está en `backend/.env.example`:
+
+| Variable | Obligatoria | Descripción | Ejemplo |
+|---|---|---|---|
+| `PORT` | No (defecto `3000`) | Puerto donde escucha Express | `3000` |
+| `MONGODB_URI` | Sí | Cadena de conexión a MongoDB Atlas | `mongodb+srv://usuario:clave@cluster.mongodb.net/proyectoweb` |
+| `JWT_SECRET` | Sí | Clave secreta para firmar y verificar tokens JWT | `secreto_largo_y_seguro` |
+| `JWT_EXPIRES_IN` | No (defecto `24h`) | Tiempo de expiración del token | `24h` |
+
+Si falta `MONGODB_URI` o `JWT_SECRET`, el servidor termina con un error claro antes de escuchar.
 
 ---
 
-## 6. Cómo ejecutar el proyecto
+## 4. Instalación y ejecución
 
-### Ejecución local
-Como la aplicación utiliza módulos ES (`<script type="module">`) y Service Worker, debe servirse desde un servidor HTTP local (no abrir con `file://`):
-
+### En local
 ```bash
-# Opción 1: con Python
-python -m http.server 8080
-
-# Opción 2: con Node (npx)
-npx serve .
+cd backend
+npm ci
+cp .env.example .env
+# Editar backend/.env con MONGODB_URI y JWT_SECRET reales
+npm run seed
+npm start
 ```
+La aplicación queda disponible en `http://localhost:3000`.
 
-Luego abre `http://localhost:8080` en el navegador.
-
-### Despliegue en AWS EC2 (Nginx)
-El servidor de producción sirve el repositorio desde `/var/www/ProyectoWeb`:
-
+### En producción (AWS EC2 con systemd y Nginx)
 ```bash
 cd /var/www/ProyectoWeb
 sudo git pull origin main
-sudo chown -R www-data:www-data /var/www/ProyectoWeb
-sudo systemctl restart nginx
+cd /var/www/ProyectoWeb/backend
+npm ci --omit=dev
+sudo systemctl restart proyectoweb
+sudo systemctl reload nginx
 ```
+
+---
+
+## 5. Catálogo de endpoints
+
+Todas las respuestas usan `Content-Type: application/json`. Los errores siguen siempre la forma `{ "error": "mensaje" }`.
+Todas las rutas de datos exigen el encabezado `Authorization: Bearer <token>` (sin token, token inválido o vencido → `401`).
+
+### Salud y Autenticación (públicas)
+
+| Método | URL | Auth | Cuerpo | Éxito | Errores |
+|---|---|---|---|---|---|
+| `GET` | `/api/salud` | No | — | `200` `{ ok, mensaje }` | — |
+| `POST` | `/api/auth/registro` | No | `{ username, email, password, name? }` | `201` + `Location` `{ token, usuario }` | `400` datos inválidos, `409` correo o username duplicado |
+| `POST` | `/api/auth/login` | No | `{ email, password }` | `200` `{ token, usuario }` | `400` faltan datos, `401` credenciales incorrectas, `403` cuenta suspendida |
+
+### Películas (CRUD completo)
+
+| Método | URL | Auth | Cuerpo | Éxito | Errores |
+|---|---|---|---|---|---|
+| `GET` | `/api/peliculas` | Sí | — | `200` `[pelicula, ...]` | `401` |
+| `GET` | `/api/peliculas/:id` | Sí | — | `200` `{ id, title, year, genre, duration, rating, synopsis, posterUrl }` | `400` id inválido, `401`, `404` |
+| `POST` | `/api/peliculas` | Sí (admin) | `{ title, year, genre, rating, duration?, synopsis?, posterUrl? }` | `201` + `Location` `{ id, ... }` | `400`, `401`, `403`, `409` duplicada |
+| `PUT` | `/api/peliculas/:id` | Sí (admin) | `{ title, year, genre, rating, duration?, synopsis?, posterUrl? }` | `200` `{ id, ... }` | `400`, `401`, `403`, `404`, `409` |
+| `PATCH` | `/api/peliculas/:id` | Sí (admin) | Campos parciales a editar | `200` `{ id, ... }` | `400`, `401`, `403`, `404`, `409` |
+| `DELETE` | `/api/peliculas/:id` | Sí (admin) | — | `204` sin cuerpo | `400`, `401`, `403`, `404` |
+
+### Reseñas (CRUD completo)
+
+| Método | URL | Auth | Cuerpo | Éxito | Errores |
+|---|---|---|---|---|---|
+| `GET` | `/api/resenas` | Sí | — | `200` `[resena, ...]` | `401` |
+| `GET` | `/api/resenas/:id` | Sí | — | `200` `{ id, peliculaId, usuarioId, username, texto, fecha, reportada }` | `400`, `401`, `404` |
+| `POST` | `/api/resenas` | Sí | `{ peliculaId, texto }` (`usuarioId` sale del token) | `201` + `Location` `{ id, ... }` | `400`, `401` |
+| `PUT` | `/api/resenas/:id` | Sí (autor) | `{ peliculaId, texto, reportada? }` | `200` `{ id, ... }` | `400`, `401`, `403`, `404` |
+| `PATCH` | `/api/resenas/:id` | Sí (autor/admin) | `{ texto? }` (autor) o `{ reportada }` | `200` `{ id, ... }` | `400`, `401`, `403`, `404` |
+| `DELETE` | `/api/resenas/:id` | Sí (autor/admin) | — | `204` sin cuerpo | `400`, `401`, `403`, `404` |
+
+### Listas personales (CRUD completo, privadas por dueño)
+
+| Método | URL | Auth | Cuerpo | Éxito | Errores |
+|---|---|---|---|---|---|
+| `GET` | `/api/listas` | Sí | — (solo listas del usuario del token) | `200` `[lista, ...]` | `401` |
+| `GET` | `/api/listas/:id` | Sí (dueño) | — | `200` `{ id, usuarioId, nombre, descripcion, peliculaIds }` | `400`, `401`, `403`, `404` |
+| `POST` | `/api/listas` | Sí | `{ nombre, descripcion?, peliculaIds? }` | `201` + `Location` `{ id, ... }` | `400`, `401`, `409` repetida |
+| `PUT` | `/api/listas/:id` | Sí (dueño) | `{ nombre, descripcion?, peliculaIds? }` | `200` `{ id, ... }` | `400`, `401`, `403`, `404`, `409` |
+| `PATCH` | `/api/listas/:id` | Sí (dueño) | `{ nombre?, descripcion?, peliculaIds? }` | `200` `{ id, ... }` | `400`, `401`, `403`, `404`, `409` |
+| `DELETE` | `/api/listas/:id` | Sí (dueño) | — | `204` sin cuerpo | `400`, `401`, `403`, `404` |
+
+### Calificaciones
+
+| Método | URL | Auth | Cuerpo | Éxito | Errores |
+|---|---|---|---|---|---|
+| `GET` | `/api/calificaciones` | Sí | — | `200` `[calificacion, ...]` | `401` |
+| `GET` | `/api/calificaciones/:id` | Sí | — | `200` `{ id, peliculaId, usuarioId, puntaje }` | `400`, `401`, `404` |
+| `POST` | `/api/calificaciones` | Sí | `{ peliculaId, puntaje }` (entero 1–5) | `201` + `Location` `{ id, ... }` | `400`, `401`, `409` ya calificada |
+| `PATCH` | `/api/calificaciones/:id` | Sí (dueño) | `{ puntaje }` | `200` `{ id, ... }` | `400`, `401`, `403`, `404` |
+| `DELETE` | `/api/calificaciones/:id` | Sí (dueño) | — | `204` sin cuerpo | `400`, `401`, `403`, `404` |
+
+### Usuarios
+
+| Método | URL | Auth | Cuerpo | Éxito | Errores |
+|---|---|---|---|---|---|
+| `GET` | `/api/usuarios` | Sí | — (nunca devuelve hash de contraseña) | `200` `[usuario, ...]` | `401` |
+| `GET` | `/api/usuarios/:id` | Sí | — | `200` `{ id, username, name, role, active, memberSince, bio, watchedIds }` | `400`, `401`, `404` |
+| `PATCH` | `/api/usuarios/:id` | Sí | `{ name?, bio?, watchedIds? }` (propio) o `{ active }` (admin) | `200` `{ id, ... }` | `400`, `401`, `403`, `404` |
