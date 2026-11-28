@@ -19,17 +19,33 @@ export default class UsuarioService {
     }
 
     async obtenerUsuarioActual() {
+        if (this.usuarioRepository.tieneToken && !this.usuarioRepository.tieneToken()) {
+            return null;
+        }
         const sesiones = await this.sesionRepository.listar();
         if (!sesiones || sesiones.length === 0 || !sesiones[0].usuarioId) {
             return null;
         }
-        return await this.obtenerPorId(sesiones[0].usuarioId);
+        try {
+            return await this.obtenerPorId(sesiones[0].usuarioId);
+        } catch {
+            return null;
+        }
     }
 
     async iniciarSesion(email, password) {
         if (!email || !password) {
             throw new Error('Debes ingresar correo y contraseña');
         }
+        if (this.usuarioRepository.autenticar) {
+            const usuario = await this.usuarioRepository.autenticar('/api/auth/login', {
+                email: email.trim().toLowerCase(),
+                password
+            });
+            await this._guardarSesion(usuario.id);
+            return usuario;
+        }
+
         const usuarios = await this.listar();
         const correoLimpio = email.trim().toLowerCase();
         const encontrado = usuarios.find(
@@ -63,6 +79,17 @@ export default class UsuarioService {
             throw new Error('La contraseña debe tener al menos 3 caracteres');
         }
 
+        if (this.usuarioRepository.autenticar) {
+            const nuevo = await this.usuarioRepository.autenticar('/api/auth/registro', {
+                username,
+                name,
+                email,
+                password
+            });
+            await this._guardarSesion(nuevo.id);
+            return nuevo;
+        }
+
         const usuarios = await this.listar();
         if (usuarios.some(u => u.email.toLowerCase() === email)) {
             throw new Error('Ya existe una cuenta con ese correo');
@@ -88,6 +115,9 @@ export default class UsuarioService {
     }
 
     async cerrarSesion() {
+        if (this.usuarioRepository.limpiarToken) {
+            this.usuarioRepository.limpiarToken();
+        }
         const sesiones = await this.sesionRepository.listar();
         for (const s of sesiones) {
             await this.sesionRepository.eliminar(s.id);
