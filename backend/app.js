@@ -1,3 +1,5 @@
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import express from 'express';
 import logger from './src/middlewares/logger.js';
 import notFound from './src/middlewares/notFound.js';
@@ -71,6 +73,11 @@ export function crearApp() {
     app.use('/api/listas', autenticar, crearRouterCrud(dependencias.listaService));
     app.use('/api/calificaciones', autenticar, crearRouterCrud(dependencias.calificacionService));
     app.use('/api/usuarios', autenticar, crearRouterUsuarios(dependencias.usuarioService));
+    app.use('/api', notFound);
+    app.use(['/backend', '/.git', '/.env'], notFound);
+
+    const carpetaFrontend = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+    app.use(express.static(carpetaFrontend, { dotfiles: 'ignore' }));
 
     app.use(notFound);
     app.use(errorHandler);

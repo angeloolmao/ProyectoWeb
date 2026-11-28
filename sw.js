@@ -1,4 +1,4 @@
-const NOMBRE = "proyectoweb-n4";
+const NOMBRE = "proyectoweb-n5";
 const ARCHIVOS = [ 
 "./",
 "css/style.css",
@@ -16,6 +16,7 @@ const ARCHIVOS = [
 "js/controllers/resenaController.js",
 "js/controllers/usuarioController.js",
 "js/data/seed.js",
+"js/repositories/ApiRepository.js",
 "js/repositories/LocalStorageRepository.js",
 "js/repositories/Repository.js",
 "js/services/calificacionService.js",

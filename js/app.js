@@ -1,6 +1,7 @@
 // Punto único de composición e inyección de dependencias de la aplicación
 
 import LocalStorageRepository from './repositories/LocalStorageRepository.js';
+import ApiRepository from './repositories/ApiRepository.js';
 
 import PeliculaService from './services/peliculaService.js';
 import UsuarioService from './services/usuarioService.js';
@@ -54,12 +55,12 @@ import {
 
 
 // Instanciación única de repositorios
-const peliculaRepository = new LocalStorageRepository('pw_peliculas', PELICULAS_INICIALES);
-const usuarioRepository = new LocalStorageRepository('pw_usuarios', USUARIOS_INICIALES);
-const sesionRepository = new LocalStorageRepository('pw_sesion', SESION_INICIAL);
-const resenaRepository = new LocalStorageRepository('pw_resenas', RESENAS_INICIALES);
-const calificacionRepository = new LocalStorageRepository('pw_calificaciones', CALIFICACIONES_INICIALES);
-const listaRepository = new LocalStorageRepository('pw_listas', LISTAS_INICIALES);
+const peliculaRepository = new ApiRepository('/api/peliculas');
+const usuarioRepository = new ApiRepository('/api/usuarios');
+const sesionRepository = new LocalStorageRepository('pw_sesion', []);
+const resenaRepository = new ApiRepository('/api/resenas');
+const calificacionRepository = new ApiRepository('/api/calificaciones');
+const listaRepository = new ApiRepository('/api/listas');
 
 // Instanciación de servicios por dominio con inyección de dependencias
 const peliculaService = new PeliculaService(peliculaRepository);
